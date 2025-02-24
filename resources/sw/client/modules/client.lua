@@ -74,22 +74,18 @@ local function remove_vehicle_weapons()
         SetVehicleWeaponCapacity(value, 3, 0)
         Wait(0)
     end)
-    
 end
 
 local function enable_rich_presence()
-    if GetConvarInt('sw:client:enable_rich_presence', 0) == 1 then  
+    if GetConvarInt('sw:client:enable_rich_presence', 0) == 1 then
         local app_id = GetConvar('sw:client:discord_app_id', '')
         if app_id == '' then return end
         local icon_large = GetConvar('sw:client:discord_icon_large', '')
         local icon_large_hover_text = GetConvar('sw:client:discord_icon_large_hover_text', '')
         local icon_small = GetConvar('sw:client:discord_icon_small', '')
-        local icon_small_hover_text = GetConvar('sw:client:discord_icon_small_hover_text', '')
-        local show_player_count = GetConvarInt('sw:client:discord_show_player_count', 1) == 1
-        local update_rate = GetConvarInt('sw:client:discord_update_rate', 30000)    
-        local buttons = GetConvar('sw:client:discord_buttons', '') 
-        local buttons_table = buttons == '' and {} or json.decode(buttons)
-        local city_name = GetConvar('sw:city_name', '')
+        local icon_small_hover_text = GetConvar('sw:client:discord_icon_small_hover_text', '')       
+        local buttons = GetConvar('sw:client:discord_buttons', '')
+        local buttons_table = buttons == '' and {} or json.decode(buttons)        
         SetDiscordAppId(app_id)
         SetDiscordRichPresenceAsset(icon_large)
         SetDiscordRichPresenceAssetText(icon_large_hover_text)
@@ -102,19 +98,11 @@ local function enable_rich_presence()
             SetDiscordRichPresenceAction(k - 1, v.text, v.url)
         end
 
-
-        CreateThread(function()
-            while true do
-                if show_player_count then
-                    SetRichPresence(locale('players') .. ': ' .. PlayerCount .. '/' .. max_players)
-                else
-                    SetRichPresence('Jogando ' .. city_name == '' and 'FiveM' or city_name)
-                end
-                Wait(update_rate)
+        AddStateBagChangeHandler('PlayerCount', '', function(bagName, _, value)
+            if bagName == 'global' and value then
+                SetRichPresence(('Players %s/%s'):format(value, max_players))
             end
-        end) 
-        
-
+        end)
     end
 end
 
@@ -146,7 +134,7 @@ function module.AddBlip(x, y, z, sprite, color, scale, name, shortRange)
         EndTextCommandSetBlipName(blip)
     end
 
-    local id = 'BLIP_' .. #blip+1
+    local id = 'BLIP_' .. #blip + 1
 
     blips[id] = blip
 
@@ -173,8 +161,7 @@ function module.SetMapGpsPoint(x, y)
     SetNewWaypoint(x, y)
 end
 
-
-AddEventHandler('onResourceStop', function (resource)
+AddEventHandler('onResourceStop', function(resource)
     if resource ~= GetCurrentResourceName() then return end
     for _, blip in next, blips do
         RemoveBlip(blip)

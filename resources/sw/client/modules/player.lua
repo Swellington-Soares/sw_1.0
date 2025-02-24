@@ -51,8 +51,6 @@ local function sync_money(moneytable, action, money_type, value)
     PlayerData.money = moneytable
 end
 
-
-
 function module.GetJob()
     return PlayerData.job
 end

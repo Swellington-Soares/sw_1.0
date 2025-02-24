@@ -3,7 +3,7 @@ local module = {}
 
 local Players = {}
 
-local PlayerCount = 0
+GlobalState.PlayerCount = 0
 
 ---Get Online Player from PlayerList
 ---@param source PlayerSource
@@ -27,15 +27,13 @@ end
 function module.Unload(source)
     if Players[source] then
         Players[source] = nil
-        PlayerCount = PlayerCount - 1
-        TriggerClientEvent('Player:Count', -1, PlayerCount)
+        GlobalState.PlayerCount = GlobalState.PlayerCount - 1
     end
 end
 
 function module.Load(source, data)
     Players[source] = data
-    PlayerCount = PlayerCount + 1
-    TriggerClientEvent('Player:Count', -1, PlayerCount)
+    GlobalState.PlayerCount = GlobalState.PlayerCount + 1
 end
 
 function module.GetData(source, key)
@@ -258,10 +256,9 @@ end
 
 function module._SaveAllOnlinePlayers()
     for k in next, Players or {} do
-       module._Save(k)
+        module._Save(k)
     end
 end
-
 
 function module.PlayAnim(src, upper, seq, looping)
     TriggerClientEvent('Player:PlayAnim', src, upper, seq, looping)
@@ -276,7 +273,7 @@ RegisterNetEvent('Player:Server:Money', function(action, money_type, value)
     local source = source
     if not Players[source] then return end
     if value < 0 then return end
-    if action == 'set' then        
+    if action == 'set' then
         Players[source].money[money_type] = value
     elseif action == 'add' then
         if value == 0 then return end
