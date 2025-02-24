@@ -1,0 +1,127 @@
+{
+    "type": "AdaptiveCard",
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "version": "1.6",
+    "body": [
+        {
+            "type": "Image",
+            "url": "https://icons.iconarchive.com/icons/graphicloads/100-flat/48/download-icon.png"
+        },
+        {
+            "type": "TextBlock",
+            "text": "Swellington Framework 1.0",
+            "wrap": true,
+            "spacing": "Small",
+            "horizontalAlignment": "Center",
+            "style": "heading",
+            "fontType": "Default",
+            "size": "Large",
+            "color": "Accent",
+            "weight": "Bolder",
+            "isSubtle": false
+        },
+        {
+            "type": "TextBlock",
+            "text": "Cadastro de Novo Usuário. (Preencha corretamente os campos)",
+            "spacing": "Small",
+            "horizontalAlignment": "Center",
+            "size": "Default",
+            "isSubtle": true,
+            "fontType": "Default"
+        },
+        {
+            "type": "Input.Text",
+            "placeholder": "seuemail@gmail.com",
+            "label": "E-mail",
+            "isRequired": true,
+            "errorMessage": "E-mail inválido.",
+            "regex": "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$",
+            "style": "Email",
+            "id": "email_field"
+        },
+        {
+            "type": "Input.Text",
+            "placeholder": "Coloque sua senha",
+            "id": "password_field",
+            "label": "Senha",
+            "maxLength": 8,
+            "isRequired": true,
+            "errorMessage": "Senha é obrigatória",
+            "style": "Password"
+        },
+        {
+            "type": "Input.Toggle",
+            "title": "Confirmo que li e aceito os termos. (https://suel.dev/terms)",
+            "id": "term_field",
+            "label": "Confirmo que li e aceito os termos. (https://suel.dev/terms)",
+            "isRequired": true,
+            "errorMessage": "É necessário aceitar os termos."
+        },
+        {
+            "type": "Input.Toggle",
+            "title": "Confirmo que li as políticas de privacidade. (https://suel.dev/privacy)",
+            "id": "privacy_field",
+            "isRequired": true,
+            "errorMessage": "É necessário aceitar a política de privacidade"
+        },
+        {
+            "type": "ColumnSet",
+            "columns": [
+                {
+                    "type": "Column",
+                    "width": 50,
+                    "items": [
+                        {
+                            "type": "ActionSet",
+                            "actions": [
+                                {
+                                    "type": "Action.OpenUrl",
+                                    "title": "DISCORD",
+                                    "style": "positive",
+                                    "iconUrl": "https://icons.iconarchive.com/icons/papirus-team/papirus-apps/128/discord-icon.png",
+                                    "url": "https://discord.gg/sueldev"
+                                }
+                            ],
+                            "horizontalAlignment": "Center"
+                        }
+                    ],
+                    "horizontalAlignment": "Center"
+                },
+                {
+                    "type": "Column",
+                    "width": 50,
+                    "items": [
+                        {
+                            "type": "ActionSet",
+                            "actions": [
+                                {
+                                    "type": "Action.OpenUrl",
+                                    "title": "Loja",
+                                    "iconUrl": "https://icons.iconarchive.com/icons/designcontest/ecommerce-business/128/store-icon.png",
+                                    "url": "https://suel.dev/store"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Column",
+                    "width": 50,
+                    "items": [
+                        {
+                            "type": "ActionSet",
+                            "actions": [
+                                {
+                                    "type": "Action.Submit",
+                                    "title": "CONFIRMAR",
+                                    "iconUrl": "https://icons.iconarchive.com/icons/custom-icon-design/flatastic-9/48/Accept-icon.png",
+                                    "style": "positive"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

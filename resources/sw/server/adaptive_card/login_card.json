@@ -1,0 +1,58 @@
+{
+    "type": "AdaptiveCard",
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "version": "1.6",
+    "body": [
+        {
+            "type": "Input.Text",            
+            "id": "email",
+            "label": "E-mail",
+            "style": "Email",
+            "isRequired": true,
+            "errorMessage": "E-mail é obrigatório"
+        },
+        {
+            "type": "Input.Text",            
+            "isRequired": true,
+            "errorMessage": "Senha é obrigatória",
+            "id": "password",
+            "label": "Senha",
+            "style": "Password"
+        },
+        {
+            "type": "ColumnSet",
+            "columns": [
+                {
+                    "type": "Column",
+                    "width": "stretch",
+                    "items": [
+                        {
+                            "type": "ActionSet",
+                            "actions": [
+                                {
+                                    "type": "Action.OpenUrl",
+                                    "title": "Recuperar Senha"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Column",
+                    "width": "stretch",
+                    "items": [
+                        {
+                            "type": "ActionSet",
+                            "actions": [
+                                {
+                                    "type": "Action.Submit",
+                                    "title": "Enviar"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

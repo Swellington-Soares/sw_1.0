@@ -1,0 +1,15 @@
+{
+    "verify_license": "Verificando licença...",
+    "verify_discord": "Verificando discord...",
+    "verify_fivem_account": "Verificando conta FiveM...",
+    "verify_fivem_account_error": "Erro ao verificar conta FiveM!",
+    "verify_discord_error": "Erro ao verificar discord!",
+    "verify_license_error": "Erro ao verificar licença!",
+    "infor_validation": "Validando informações...",
+    "accept_terms": "Você precisa aceitar os termos de uso!",
+    "validating_register": "Validando cadastro...",
+    "token_not_found": "Você precisa informar o Token.",
+    "token_invalid": "Token inválido. Entre em contato com o suporte.",
+    "not_allowed": "Você não está autorizado a entrar neste servidor. Envie seu ID { %d }para o suporte.",
+    "is_blocked": "Você está bloqueado do servidor. Envie seu ID { %d }para o suporte."
+}

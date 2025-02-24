@@ -1,0 +1,13 @@
+---@meta
+---@alias PlayerSource number | string
+---@alias CommonData string | number | table | boolean | nil
+
+---@class User
+---@field id number
+---@field license string
+---@field discord string
+---@field fivem string
+---@field email string
+---@field is_valided boolean
+---@field is_allowed boolean
+---@field password string
