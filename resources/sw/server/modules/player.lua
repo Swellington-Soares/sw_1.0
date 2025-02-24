@@ -3,6 +3,8 @@ local module = {}
 
 local Players = {}
 
+local PlayerCount = 0
+
 ---Get Online Player from PlayerList
 ---@param source PlayerSource
 ---@return table
@@ -25,11 +27,15 @@ end
 function module.Unload(source)
     if Players[source] then
         Players[source] = nil
+        PlayerCount = PlayerCount - 1
+        TriggerClientEvent('Player:Count', -1, PlayerCount)
     end
 end
 
 function module.Load(source, data)
     Players[source] = data
+    PlayerCount = PlayerCount + 1
+    TriggerClientEvent('Player:Count', -1, PlayerCount)
 end
 
 function module.GetData(source, key)
@@ -255,6 +261,36 @@ function module._SaveAllOnlinePlayers()
        module._Save(k)
     end
 end
+
+
+function module.PlayAnim(src, upper, seq, looping)
+    TriggerClientEvent('Player:PlayAnim', src, upper, seq, looping)
+end
+
+function module.StopAnim(src, upper)
+    TriggerClientEvent('Player:StopAnim', src, upper)
+end
+
+--Net events
+RegisterNetEvent('Player:Server:Money', function(action, money_type, value)
+    local source = source
+    if not Players[source] then return end
+    if value < 0 then return end
+    if action == 'set' then        
+        Players[source].money[money_type] = value
+    elseif action == 'add' then
+        if value == 0 then return end
+        Players[source].money[money_type] = (Players[source].money[money_type] or 0) + value
+    elseif action == 'remove' then
+        if value == 0 then return end
+        Players[source].money[money_type] = (Players[source].money[money_type] or 0) - value
+        if Players[source].money[money_type] < 0 then
+            Players[source].money[money_type] = 0
+        end
+    end
+    TriggerClientEvent('Player:SyncMoney', source, Players[source].money, action, money_type, value)
+end)
+
 
 local function __init__(storage_module, server_module, character_module)
     local _module = { name = 'Player', exp_prefix = 'Player', }
