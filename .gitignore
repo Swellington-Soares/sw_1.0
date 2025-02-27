@@ -5,3 +5,4 @@ config/rcon.cfg
 resources/\[devtools\]/
 db/
 resources/\[testes\]/
+.vscode/
