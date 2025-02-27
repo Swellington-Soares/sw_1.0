@@ -145,8 +145,8 @@ local function CreatePlayerData(newdata)
     money.bank = money?.bank or GetConvarInt('sw:startbank', 10000)
     PlayerData.money = money
     PlayerData.permissions = PlayerData?.permissions or {}
-    PlayerData.job = PlayerData?.job or { name = 'unemployed', label = 'Unemployed', grade = 0 }
-    PlayerData.gang = PlayerData?.gang or { name = 'none', label = 'None' }
+    PlayerData.job = PlayerData?.job or { name = 'unemployed', label = 'Unemployed', grade = 0, gradeName = 'Unemployed' }
+    PlayerData.gang = PlayerData?.gang or { name = 'none', label = 'None', gradeName = 'None', grade = 0 }
 
     return PlayerData
 end
@@ -156,7 +156,7 @@ function module.Login(source, id)
     local character = imod.character.CharacterGetOne(id)
     if not character or character?.license ~= license then
         imod.server.Ban(license, 'Tentativa de login com personagem inválido')
-        DropPlayer(source, 'Tentativa de login com personagem inválido')
+        DropPlayer(source, 'Tentativa de login com personagem inválido')        
         return false
     end
 
@@ -184,11 +184,12 @@ function module.Login(source, id)
 
 
     --sync status data and health
-    local ped = GetPlayerPed(source)
-    local health = GetEntityHealth(ped)
-    if health ~= PlayerData.datatable.health then
-        SetEntityHealth(ped, PlayerData.datatable.health)
-    end
+    -- local ped = GetPlayerPed(source)
+    -- local health = GetEntityHealth(ped)
+    
+    -- if health ~= PlayerData.datatable.health then
+    --     SetEntityHealth(ped, PlayerData.datatable.health)
+    -- end
 
     module.Load(source, PlayerData)
 
@@ -208,6 +209,8 @@ function module.Login(source, id)
     TriggerClientEvent('Player:SyncMoney', source, PlayerData.money)
 
     TriggerEvent('player:login', source, { user_id = PlayerData.user_id, char_id = id })
+
+    Player(source).state:set('isLoggedIn', true, true)
 
     return true, PlayerData.lastposition
 end
