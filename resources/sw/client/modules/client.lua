@@ -1,6 +1,5 @@
 local module = {}
 
-local PlayerCount = 0
 
 local function set_relationships()
     local relation_mode = GetConvarInt('sw:client:hate_mode', 1) == 1 and 5 or 1
@@ -81,8 +80,8 @@ local function enable_rich_presence()
         local app_id = GetConvar('sw:client:discord_app_id', '')
         if app_id == '' then return end
         local icon_large = GetConvar('sw:client:discord_icon_large', '')
-        local icon_large_hover_text = GetConvar('sw:client:discord_icon_large_hover_text', '')
         local icon_small = GetConvar('sw:client:discord_icon_small', '')
+        local icon_large_hover_text = GetConvar('sw:client:discord_icon_large_hover_text', '')        
         local icon_small_hover_text = GetConvar('sw:client:discord_icon_small_hover_text', '')       
         local buttons = GetConvar('sw:client:discord_buttons', '')
         local buttons_table = buttons == '' and {} or json.decode(buttons)        
@@ -112,11 +111,6 @@ local function init()
     remove_vehicle_weapons()
     enable_rich_presence()
 end
-
---event
-RegisterNetEvent('Player:Count', function(count)
-    PlayerCount = count or 0
-end)
 
 --map
 local blips = {}
