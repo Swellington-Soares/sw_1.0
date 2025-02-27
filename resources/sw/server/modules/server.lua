@@ -49,7 +49,10 @@ function module.GetPlayerIdentifier(source, _type)
     return identifier and (identifier:gsub(_type .. ':', ''))    
 end
 
-
+function module.TriggerRpc(func_name, source, ...)
+    if not source or source == 0 or source == '0' then return end
+    return lib.callback.await('RPC::' .. func_name, source, ...)
+end
 
 local function __init__()
     local _module = { name = 'Server',}

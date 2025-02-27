@@ -26,6 +26,28 @@ end
 ---@param source number | string
 function module.Unload(source)
     if Players[source] then
+
+        local groups =  Players[source].PlayerData.groups
+        local permissions =  Players[source].PlayerData.permissions
+        local job =  Players[source].PlayerData.job
+        local gang =  Players[source].PlayerData.gang
+
+        for k in next, groups or {} do
+            lib.removePrincipal(source, 'group.' .. k)
+        end
+
+        for _, v in next, permissions or {} do
+            lib.removeAce(source, 'permission.' .. v, 'allow')
+        end
+
+        if job?.name and job.name ~= 'unemployed' then
+            lib.removePrincipal(source, 'job.' .. job.name)
+        end
+
+        if gang?.name and gang.name ~= 'none' then
+            lib.removePrincipal(source, 'gang.' .. gang.name)
+        end
+
         Players[source] = nil
         GlobalState.PlayerCount = GlobalState.PlayerCount - 1
     end
@@ -152,6 +174,7 @@ local function CreatePlayerData(newdata)
 end
 
 function module.Login(source, id)
+    local source = tonumber(source)
     local license = imod.server.GetPlayerIdentifier(source, 'license')
     local character = imod.character.CharacterGetOne(id)
     if not character or character?.license ~= license then
@@ -166,30 +189,30 @@ function module.Login(source, id)
     --update groups
     for k, v in next, PlayerData?.groups or {} do
         if v then
-            lib.addPrincipal('player.' .. source, 'group.' .. k)
+            lib.addPrincipal(source, 'group.' .. k)
         end
     end
 
     for _, v in next, PlayerData?.permissions or {} do
-        lib.addAce('player.' .. source, 'permission.' .. v, 'allow')
+        lib.addAce(source, 'permission.' .. v, 'allow')
     end
 
     if PlayerData?.job?.name and PlayerData.job.name ~= 'unemployed' and PlayerData.job?.duty then
-        lib.addPrincipal('player.' .. source, 'job.' .. PlayerData.job.name)
+        lib.addPrincipal(source, 'job.' .. PlayerData.job.name)
     end
 
     if PlayerData?.gang?.name and PlayerData.gang.name ~= 'none' then
-        lib.addPrincipal('player.' .. source, 'gang.' .. PlayerData.gang.name)
+        lib.addPrincipal(source, 'gang.' .. PlayerData.gang.name)
     end
 
 
     --sync status data and health
-    -- local ped = GetPlayerPed(source)
-    -- local health = GetEntityHealth(ped)
+    local ped = GetPlayerPed(source)
+    local health = GetEntityHealth(ped)
     
-    -- if health ~= PlayerData.datatable.health then
-    --     SetEntityHealth(ped, PlayerData.datatable.health)
-    -- end
+    if health ~= PlayerData.datatable.health then
+        imod.server.TriggerRpc('SetEntityHealth', source, PlayerData.datatable.health)
+    end
 
     module.Load(source, PlayerData)
 

@@ -155,12 +155,17 @@ function module.SetMapGpsPoint(x, y)
     SetNewWaypoint(x, y)
 end
 
+function module.RegisterRpc(func_name, cb)
+    lib.callback.register('RPC::' .. func_name, cb)
+end
+
 AddEventHandler('onResourceStop', function(resource)
     if resource ~= GetCurrentResourceName() then return end
     for _, blip in next, blips do
         RemoveBlip(blip)
     end
 end)
+
 
 local function __init__()
     init()

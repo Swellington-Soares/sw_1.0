@@ -133,6 +133,10 @@ function module.StopAnim(upper, force)
     end
 end
 
+function module.SetPlayerHealth( health )
+    SetEntityHealth(cache.ped, math.floor(math.min(200, math.max(0, health))))
+end
+
 --events
 RegisterNetEvent('Player:SyncJob', sync_job)
 RegisterNetEvent('Player:SyncGang', sync_gang)
@@ -145,6 +149,9 @@ RegisterNetEvent('Player:SyncData', function(data)
     PlayerData = data or {}
 end)
 
+local function init_rpc()
+    exports.sw:RegisterRpc('SetEntityHealth', module.SetPlayerHealth)
+end
 
 local function init()
     local ped = PlayerPedId()
@@ -163,6 +170,7 @@ lib.onCache('ped', function()
 end)
 
 local function __init__()
+    init_rpc()
     local _module = { name = 'Player' }
     return setmetatable(_module, { __index = module })
 end
