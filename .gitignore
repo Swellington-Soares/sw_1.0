@@ -4,3 +4,4 @@ config/keys.cfg
 config/rcon.cfg
 resources/\[devtools\]/
 db/
+resources/\[testes\]/
