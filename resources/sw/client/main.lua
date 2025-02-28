@@ -3,6 +3,7 @@ local old_print = print
 local print = lib.print.info
 local modules = {}
 
+modules.client = require '@sw.client.modules.client' ()
 modules.player = require '@sw.client.modules.player' ()
 
 for k, v in next, modules do    

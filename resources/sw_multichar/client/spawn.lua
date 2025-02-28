@@ -3,8 +3,7 @@ local print = lib.print.info
 local config = require '@sw_multichar.shared.config'
 local spawn_cam
 
-local function create_preview_cam(coord)
-    
+local function create_preview_cam(coord)    
     spawn_cam = CreateCam('DEFAULT_SCRIPTED_CAMERA', true)
     SetCamCoord(spawn_cam, coord.x, coord.y, coord.z + 150.0)
     SetCamRot(spawn_cam, -90.0, 0.0, 0.0, 2)
@@ -25,6 +24,7 @@ local function clear_all()
         DestroyCam(spawn_cam, false)
         spawn_cam = nil
     end
+    ClearFocus()
 end
 
 local function spawn(isFirst, last_location)    
