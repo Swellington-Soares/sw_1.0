@@ -1,0 +1,33 @@
+import React from "react";
+import { BarType, iBar, iCinematic, iClientInfo, iCompass, iHudStyle, iMiniMap, iMusicInfo, iNavigationWidget, iVehicleInfo } from "./BasicTypes";
+
+export type DataContextProps = {
+  isSettingsOpen: boolean;
+  setSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  ClientInfo: iClientInfo;
+  setClientInfo: React.Dispatch<React.SetStateAction<iClientInfo>>;
+  Compass: iCompass;
+  setCompass: React.Dispatch<React.SetStateAction<iCompass>>;
+  MiniMap: iMiniMap;
+  setMiniMap: React.Dispatch<React.SetStateAction<iMiniMap>>;
+  NavigationWidget: iNavigationWidget;
+  setNavigationWidget: React.Dispatch<React.SetStateAction<iNavigationWidget>>;
+  MusicInfo: iMusicInfo;
+  setMusicInfo: React.Dispatch<React.SetStateAction<iMusicInfo>>;
+  BarsInfo: Record<BarType, iBar>;
+  setBarsInfo: React.Dispatch<React.SetStateAction<Record<BarType, iBar>>>;
+  HudStyle: iHudStyle;
+  setHudStyle: React.Dispatch<React.SetStateAction<iHudStyle>>;
+  Cinematic: iCinematic;
+  setCinematic: React.Dispatch<React.SetStateAction<iCinematic>>;
+  VehicleInfo: iVehicleInfo;
+  setVehicleInfo: React.Dispatch<React.SetStateAction<iVehicleInfo>>;
+  isHudReady: boolean;
+  onChangeOnOptions: (key: string, oldValue: any, newValue: any) => void;
+  onChangeBar: (key: BarType, bar: iBar) => void;
+  handleMiniMapStyleChange: (style: "circle" | "rectangle") => void;
+  onChangeHudPositions: (key: string, newX?: number, newY?: number, subKey?: any) => void;
+  isEditorOpen: boolean;
+  setEditorOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  useableColors: string[];
+};

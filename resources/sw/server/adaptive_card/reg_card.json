@@ -39,16 +39,7 @@
             "style": "Email",
             "id": "email_field"
         },
-        {
-            "type": "Input.Text",
-            "placeholder": "Coloque sua senha",
-            "id": "password_field",
-            "label": "Senha",
-            "maxLength": 8,
-            "isRequired": true,
-            "errorMessage": "Senha é obrigatória",
-            "style": "Password"
-        },
+        
         {
             "type": "Input.Toggle",
             "title": "Confirmo que li e aceito os termos. (https://suel.dev/terms)",

@@ -1,0 +1,14 @@
+<svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Navigation Icon GRT">
+<g id="Group 397">
+<circle id="Ellipse 272" cx="14.3067" cy="14.3054" r="11.2737" transform="rotate(-40.5943 14.3067 14.3054)" fill="url(#paint0_linear_315_87)" fill-opacity="0.26" stroke="white" stroke-width="2.25474"/>
+<path id="Vector 95" d="M9.03041 9.05466L13.1288 22.0733C13.3103 22.6497 14.1408 22.6038 14.2577 22.0109L15.4397 16.0145L22.0339 15.5088C22.6299 15.4631 22.7798 14.6573 22.2402 14.4004L9.73242 8.44428C9.33226 8.25373 8.89732 8.63189 9.03041 9.05466Z" fill="white"/>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_315_87" x1="14.3067" y1="4.15908" x2="14.3067" y2="24.4517" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="#999999" stop-opacity="0"/>
+</linearGradient>
+</defs>
+</svg>

@@ -84,28 +84,15 @@ function module._CreateUser(data)
         return false, 'Você precisa informar um email'
     end
 
-    if not data.password then
-        return false, 'Você precisa informar uma senha'
-    end
-
     if not validemail(data.email) then
         return false, 'Email inválido'
     end
 
-    if #data.password < 8 then
-        return false, 'A senha deve ter no mínimo 8 caracteres'
-    end
-
-    if #data.password > 15 then
-        return false, 'A senha deve ter no máximo 15 caracteres'
-    end
-
-    local created = injected_modules.storage.Scalar('CALL `add_user`(?, ?, ?, ?, ?)', {
+    local created = injected_modules.storage.Scalar('CALL `add_user`(?, ?, ?, ?)', {
         data.license,
         data.discord,
-        data.cfx,
-        data.email,
-        GetPasswordHash(data.password)
+        data.fivem,
+        data.email
     })
 
     if not created or created.status == 0 then

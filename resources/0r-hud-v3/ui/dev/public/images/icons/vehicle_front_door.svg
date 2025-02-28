@@ -1,0 +1,15 @@
+<svg width="37" height="30" viewBox="0 0 37 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 483">
+<g id="Rectangle 611">
+<rect width="37" height="30" rx="1" fill="url(#paint0_radial_287_862)" fill-opacity="0.58"/>
+<rect x="0.5" y="0.5" width="36" height="29" rx="0.5" stroke="white" stroke-opacity="0.1"/>
+</g>
+<path id="Vector" d="M19.488 8.13281C20.6463 8.13281 22.2283 8.83734 23.0027 9.69832L26.9713 14.1081C27.488 14.6818 27.7293 15.7559 27.5072 16.4962L26.2085 20.8253C25.9869 21.5648 25.1733 22.1702 24.401 22.1702H11.4031C10.6271 22.1702 9.99925 21.5417 9.99925 20.7664V14.4496L10.6572 8.87631C10.7073 8.45229 11.0667 8.13281 11.4936 8.13281H19.488ZM11.4031 14.4494H25.3906L21.9596 10.6374C21.4496 10.0712 20.2488 9.5364 19.488 9.5364H12.3298C12.2257 9.5364 12.1372 9.61246 12.1216 9.71536L11.4031 14.4494Z" fill="white"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_287_862" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(18.5 15) rotate(90) scale(15 18.5)">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="#999999"/>
+</radialGradient>
+</defs>
+</svg>

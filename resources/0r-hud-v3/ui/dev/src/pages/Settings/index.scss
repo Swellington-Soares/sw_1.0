@@ -1,0 +1,74 @@
+.element {
+  height: 100%;
+  width: 100%;
+  padding: 0 16px;
+  border-bottom: 2px solid;
+  display: flex;
+  align-items: center;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+
+  svg {
+    padding: 2px;
+  }
+  &.active {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(217, 217, 217, 0.17) 100%);
+    border-color: #d9d9d9;
+  }
+  &:not(.active) {
+    border-color: #212121;
+  }
+}
+
+@media (min-width: 3840px) {
+  .page-bar-elements button svg {
+    padding: 0;
+  }
+}
+
+.settings-layers {
+  #bucket {
+    .type-selector button {
+      svg {
+        transition: fill-opacity 0.15s ease;
+      }
+      &:hover {
+        svg {
+          fill-opacity: 1 !important;
+        }
+      }
+    }
+  }
+}
+
+.setting-switch {
+  input[type="checkbox"] {
+    appearance: none;
+    height: 24px;
+    width: 48px;
+    background-color: #0000004d;
+    border-radius: 2px;
+    position: relative;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  input[type="checkbox"]::before {
+    content: "";
+    display: block;
+    height: 16px;
+    width: 16px;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: calc(1.5em / 2);
+    border-radius: 0.2em;
+    transition: left 0.3s ease;
+    background-color: white;
+    opacity: 0.15;
+  }
+  input[type="checkbox"]:checked::before {
+    left: calc(100% - (1.5em / 2));
+    opacity: 1;
+  }
+}

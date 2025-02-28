@@ -24,10 +24,6 @@ for k, v in next, modules do
 end
 
 
-RegisterCommand('test', function(source)
-    modules.server:GetPlayerIdentifier(source, 'license')
-end)
-
 local AdaptiveCards = {}
 AdaptiveCards.Reg = lib.loadJson('@sw.server.adaptive_card.reg_card')
 AdaptiveCards.InputToken = lib.loadJson('@sw.server.adaptive_card.input_token_card')
@@ -38,7 +34,7 @@ local function input_token(deff)
     local p = promise.new()
     CreateThread(function()
         Wait(0)
-        deff.presentCard(AdaptiveCards.InputToken, function (data)
+        deff.presentCard(AdaptiveCards.InputToken, function(data)
             if not data.token then
                 p:resolve(nil)
             else
@@ -49,134 +45,137 @@ local function input_token(deff)
     return Citizen.Await(p)
 end
 
+local function send_token_email(email, token)
+    CreateThread(function()
+        Wait(0)
+    end)
+end
 
---fivem default events
-AddEventHandler('playerConnecting', function(name, _, deff)
-    local src = source        
-    deff.defer()
-    Wait(50)
-        
-    deff.update(locale('verify_license'))   
-    local license = modules.server.GetPlayerIdentifier(src, 'license')
-    Wait(50)
-    deff.update(locale('verify_discord'))
-    local discord = modules.server.GetPlayerIdentifier(src, 'discord')
-    Wait(50)
-    deff.update(locale('verify_fivem_account'))
-    local cfx = modules.server.GetPlayerIdentifier(src, 'fivem')
-    Wait(50)
-
-    if not license then
-        return deff.done(locale('verify_license_error'))
-    end
-
-    if not discord then
-        return deff.done(locale('verify_discord_error'))
-    end
-
-    if not cfx then
-        return deff.done(locale('verify_fivem_account_error'))
-    end
-
-    deff.update('Verificando dados...')
-
-    local user = modules.auth._GetUser(license) --[[ @as User ]]
+local function on_player_connecting(name, _, d)
+    local src = source
+    d.defer()
+    Wait(0)
     
-    Wait(50)
-    
+    print('Player connecting: ', name, src)
 
-    if not user then    
-        return deff.presentCard(AdaptiveCards.Reg, function(data, rawdata)
-            deff.update(locale('infor_validation'))
-            Wait(50)            
-            if not data.privacy_field or not data.term_field then
-                return deff.done(locale('accept_terms'))
+    local response = nil
+    local function register_timeout_check()
+        response = nil
+        CreateThread(function()
+            local success = pcall(lib.waitFor, function() return response end, locale('register_timeout'), 300000)
+            if not success then
+                return d.done(locale('register_timeout'))
             end
-            local isUserCreated, message = modules.auth._CreateUser(
-                {
-                    license = license, 
-                    discord = discord, 
-                    cfx = cfx, 
-                    email = data.email_field, 
-                    password = data.password_field
-                })
-            
-            if not isUserCreated then
-                return deff.done(message)
-            end
-
-            deff.update(locale('validating_register'))
-            Wait(50)
-
-            local generatedToken = modules.auth._GenerateToken(license)  
-            
-            local isSendedEmail, message = modules.email._SendEmail(data.email_field, { template = 'token_received', { token = generatedToken } })
-
-            if not isSendedEmail then
-                return deff.done(message)
-            end
-
-            local user_token = input_token(deff)
-            
-            if not user_token then
-                return deff.done(locale('token_not_found'))
-            end
-
-            if not modules.auth._ValidateToken(license, user_token) then
-                return deff.done(locale('token_invalid'))
-            end
-
-            return deff.done()
         end)
     end
 
+    CreateThread(function()
+        repeat
+            Wait(250)
+        until not DoesPlayerExist(src)
+        response = true
+    end)
 
-    --e-mail and password validation
-    local is_login_valid = modules.auth._AuthUser(user, license, deff, AdaptiveCards.InputEmailPassword )
+    local license = modules.server.GetPlayerIdentifier(src, 'license')
+    local discord = modules.server.GetPlayerIdentifier(src, 'discord')
+    local fivemId = modules.server.GetPlayerIdentifier(src, 'fivem')
 
-    if not is_login_valid then
-        return deff.done(locale('invalid_login'))
+    d.update(locale('verify_license'))
+    Wait(50)
+    if not license then
+        return d.done(locale('verify_license_error'))
+    end
+
+    d.update(locale('verify_discord'))
+    Wait(50)
+    if not discord then
+        return d.done(locale('verify_discord_error'))
+    end
+
+    d.update(locale('verify_fivem_account'))
+    Wait(50)
+    if not fivemId then
+        return d.done(locale('verify_fivem_account_error'))
+    end
+
+    Wait(100)
+
+    local user = modules.auth._GetUser(license)
+    if not user then
+        register_timeout_check()
+        return d.presentCard(AdaptiveCards.Reg, function(data)
+            response = true
+            local email = data.email_field
+            local accept_terms = data.term_field
+            local accept_privacy = data.privacy_field
+            if not email or not accept_terms or not accept_privacy then
+                return d.done(locale('register_error'))
+            end
+
+            local is_user_created, message = modules.auth._CreateUser({
+                license = license,
+                discord = discord,
+                fivem = fivemId,
+                email = email
+            })
+
+            if not is_user_created then
+                return d.done(message)
+            end
+
+            Wait(0)
+            send_token_email(email, modules.auth._GenerateToken(license))
+            register_timeout_check()
+            local user_token = input_token(d)
+            response = true
+            if not user_token or not modules.auth._ValidateToken(license, user_token) then
+                return d.done(locale('token_not_found'))
+            end
+            return d.done()
+        end)
     end
 
     if not user.is_valided then
-        Wait(50)
-
-        local user_token = input_token(deff)
-
-        if not user_token then
-            return deff.done(locale('token_not_found'))
+        register_timeout_check()
+        local user_token = input_token(d)
+        response = true
+        if not user_token or not modules.auth._ValidateToken(license, user_token) then
+            return d.done(locale('token_not_found'))
         end
-
-        if not modules.auth._ValidateToken(license, user_token) then
-            return deff.done(locale('token_invalid'))
-        end
-
-        return deff.done()
+        return d.done()
     end
 
-    if GetConvarInt('sw:enable_allowlist', 1) == 1 and not user.is_allowed then
-        return deff.done(locale('not_allowed'))
-    end    
+    d.update(locale('infor_validation'))
+    Wait(50)
 
     if modules.auth._IsUserBlocked(license) then
-        return deff.done(locale('is_blocked'))
+        return d.done(locale('user_blocked'))
     end
-    
-    deff.done()
-end)
 
-AddEventHandler('playerDropped', function(reason)
+    if GetConvar('sw:enable_allowlist', 1) == 1 and not user.is_allowed then
+        return d.done(locale('user_not_allowed', user.id))
+    end
+
+    d.update(locale('infor_validation_success'))
+    Wait(50)
+    d.done()
+end
+
+local function on_player_dropped(reason)
     local src = source
     modules.player._SaveAndUnload(src)
     print('Player dropped: ', src, reason)
-end)
+end
+
+--fivem default events
+AddEventHandler('playerConnecting', on_player_connecting)
+AddEventHandler('playerDropped', on_player_dropped)
 
 local function player_save_thread()
-    local save_interval = GetConvarInt('sw:save_interval', 1) * 60000 --save in minutes    
+    local save_interval = GetConvarInt('sw:save_interval', 1) * 60000 --save in minutes
     while true do
-        
         Wait(save_interval)
-        modules.player._SaveAllOnlinePlayers()        
+        modules.player._SaveAllOnlinePlayers()
     end
 end
 

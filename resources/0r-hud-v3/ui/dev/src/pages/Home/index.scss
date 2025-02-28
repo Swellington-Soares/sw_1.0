@@ -1,0 +1,184 @@
+.hud-bar-size {
+  width: var(--bar-size) !important;
+  height: var(--bar-size) !important;
+}
+
+.bar {
+  width: 42px;
+  height: 42px;
+  &.small {
+    width: 38px;
+    height: 38px;
+  }
+  &.extrasmall {
+    width: 34px;
+    height: 34px;
+  }
+  &.large {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .bar {
+    width: 48px;
+    height: 48px;
+    &.small {
+      width: 44px;
+      height: 44px;
+    }
+    &.extrasmall {
+      width: 38px;
+      height: 38px;
+    }
+    &.large {
+      width: 52px;
+      height: 52px;
+    }
+  }
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Fade Out Animation */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Cinematic Bars Style with Animation */
+.cinematic-bar {
+  z-index: 9999;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 8rem;
+  background-color: black;
+  opacity: 0;
+  animation-duration: 0.4s;
+  animation-fill-mode: forwards;
+  &.fade-in {
+    animation-name: fadeIn;
+  }
+  &.fade-out {
+    animation-name: fadeOut;
+  }
+}
+
+.glow-text {
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 0px rgba(255, 255, 255, 1), 0 0 6px rgba(255, 255, 255, 0.75);
+  &.text-FF013D {
+    text-shadow: 0 0 0px rgba(255, 1, 61, 1), 0 0 6px rgba(255, 1, 61, 0.75);
+  }
+}
+
+.grt-ozel {
+  color: transparent !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+.veh-hud-grt-one .CircularProgressbar-trail {
+  stroke: linear-gradient(186deg, #0b73ee 12.99%, #fff 85.79%) !important;
+}
+
+@keyframes plane-dial {
+  0% {
+    transform: translateY(-50%) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-50%) rotate(2deg);
+  }
+  100% {
+    transform: translateY(-50%) rotate(-2deg);
+  }
+}
+.animate-plane-dial {
+  animation: plane-dial 4s ease-in-out infinite;
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  width: 200%;
+  height: 175%;
+  animation: wave-animation 10s infinite linear;
+  will-change: transform;
+}
+
+.wave2 {
+  opacity: 0.5;
+  animation: wave-animation 10s infinite linear reverse;
+  height: 200%;
+  will-change: transform;
+}
+
+.wave3 {
+  opacity: 0.2;
+  height: 225%;
+  animation: wave-animation 15s infinite linear;
+  will-change: transform;
+}
+
+@keyframes wave-animation {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-10%);
+  }
+  100% {
+    transform: translateX(0) translateY(0%);
+  }
+}
+
+@keyframes rpm {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+@keyframes rpmbounce {
+  0%,
+  100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+.animate-rpm {
+  animation: rpm 0.5s linear;
+}
+.animate-rpmbounce {
+  animation: rpmbounce 0.8s infinite;
+}
+
+.typeofbars {
+  .blackandwhite {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+  }
+}

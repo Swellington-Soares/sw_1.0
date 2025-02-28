@@ -1,0 +1,41 @@
+<svg width="49" height="47" viewBox="0 0 49 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Night Icon GRT">
+<g id="Icon" filter="url(#filter0_d_190_71)">
+<path id="Moon" d="M38.0838 23.5C38.0838 30.4036 32.4874 36 25.5838 36C20.8723 36 16.7696 33.3933 14.6392 29.5434C14.3992 29.1097 14.9203 28.6631 15.3693 28.8729C16.5734 29.4357 17.9169 29.75 19.3338 29.75C24.5115 29.75 28.7088 25.5527 28.7088 20.375C28.7088 16.7961 26.7034 13.6855 23.7549 12.1058C23.3181 11.8718 23.3631 11.1867 23.854 11.1187C24.4194 11.0405 24.9969 11 25.5838 11C32.4874 11 38.0838 16.5964 38.0838 23.5Z" fill="url(#paint0_linear_190_71)"/>
+<g id="Stars">
+<path id="Star 1" d="M20.375 14.125L21.4771 15.7331L23.3471 16.2843L22.1582 17.8294L22.2118 19.7782L20.375 19.125L18.5382 19.7782L18.5918 17.8294L17.4029 16.2843L19.2729 15.7331L20.375 14.125Z" fill="#FFD600"/>
+<path id="Star 2" d="M18.8125 23.5L19.3635 24.304L20.2985 24.5797L19.7041 25.3522L19.7309 26.3266L18.8125 26L17.8941 26.3266L17.9209 25.3522L17.3265 24.5797L18.2615 24.304L18.8125 23.5Z" fill="#FFD600"/>
+<path id="Star 3" d="M13.0833 18.293L13.8181 19.365L15.0647 19.7325L14.2722 20.7626L14.3079 22.0618L13.0833 21.6263L11.8588 22.0618L11.8945 20.7626L11.102 19.7325L12.3486 19.365L13.0833 18.293Z" fill="#FFD600"/>
+</g>
+</g>
+<g id="Blur Effect" filter="url(#filter1_f_190_71)">
+<path id="Vector" d="M38.0838 23.5C38.0838 30.4036 32.4874 36 25.5838 36C20.8723 36 16.7696 33.3933 14.6392 29.5434C14.3992 29.1097 14.9203 28.6631 15.3693 28.8729C16.5734 29.4357 17.9169 29.75 19.3338 29.75C24.5115 29.75 28.7088 25.5527 28.7088 20.375C28.7088 16.7961 26.7034 13.6855 23.7549 12.1058C23.3181 11.8718 23.3631 11.1867 23.854 11.1187C24.4194 11.0405 24.9969 11 25.5838 11C32.4874 11 38.0838 16.5964 38.0838 23.5Z" fill="white" fill-opacity="0.52"/>
+<g id="Group 3">
+<path id="Star 1_2" d="M20.375 14.125L21.4771 15.7331L23.3471 16.2843L22.1582 17.8294L22.2118 19.7782L20.375 19.125L18.5382 19.7782L18.5918 17.8294L17.4029 16.2843L19.2729 15.7331L20.375 14.125Z" fill="#FFD600"/>
+<path id="Star 2_2" d="M18.8125 23.5L19.3635 24.304L20.2985 24.5797L19.7041 25.3522L19.7309 26.3266L18.8125 26L17.8941 26.3266L17.9209 25.3522L17.3265 24.5797L18.2615 24.304L18.8125 23.5Z" fill="#FFD600"/>
+<path id="Star 3_2" d="M13.0833 18.293L13.8181 19.365L15.0647 19.7325L14.2722 20.7626L14.3079 22.0618L13.0833 21.6263L11.8588 22.0618L11.8945 20.7626L11.102 19.7325L12.3486 19.365L13.0833 18.293Z" fill="#FFD600"/>
+</g>
+</g>
+</g>
+<defs>
+<filter id="filter0_d_190_71" x="8.00156" y="7.9" width="33.1805" height="31.2" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="1.55"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_190_71"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_190_71" result="shape"/>
+</filter>
+<filter id="filter1_f_190_71" x="0.501562" y="0.4" width="48.1805" height="46.2" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="5.3" result="effect1_foregroundBlur_190_71"/>
+</filter>
+<linearGradient id="paint0_linear_190_71" x1="26.0087" y1="11" x2="26.0087" y2="36" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="#999999"/>
+</linearGradient>
+</defs>
+</svg>

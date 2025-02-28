@@ -5,8 +5,7 @@ function module._IsStarted()
         return false
     end
 
-    local errorCode = PerformHttpRequestAwait(GetConvar('sw:email_service_host', ''))        
-    return errorCode == 200
+    return PerformHttpRequestAwait(GetConvar('sw:email_service_host', ''))  == 200           
 end
 
 function module._SendEmail(to, data) 

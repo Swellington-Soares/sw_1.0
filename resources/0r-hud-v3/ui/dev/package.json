@@ -1,0 +1,50 @@
+{
+  "name": "ui",
+  "homepage": "ui/build",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:game": "vite build --watch --emptyOutDir",
+    "build": "tsc && vite build --emptyOutDir",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@eslint/config-array": "^0.17.0",
+    "@eslint/object-schema": "^2.1.4",
+    "@types/lodash": "^4.17.7",
+    "classnames": "^2.5.1",
+    "glob": "^10.4.2",
+    "gsap": "^3.12.5",
+    "i18next": "^23.11.5",
+    "i18next-http-backend": "^2.5.2",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-circular-progressbar": "^2.1.0",
+    "react-dom": "^18.2.0",
+    "react-drag-drop-container-typescript": "^1.4.1",
+    "react-i18next": "^14.1.2",
+    "react-icons": "^4.12.0",
+    "react-svg": "^16.1.34",
+    "vite-tsconfig-paths": "^4.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "postcss": "^8.4.40",
+    "sass": "^1.69.7",
+    "tailwindcss": "^3.4.7",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11"
+  }
+}
