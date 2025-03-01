@@ -179,5 +179,5 @@ local function player_save_thread()
     end
 end
 
-
 CreateThread(player_save_thread)
+

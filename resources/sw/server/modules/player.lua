@@ -26,7 +26,7 @@ end
 ---@param source number | string
 function module.Unload(source)
     if Players[source] then
-        lib.print.info('Unloading player: ' .. Players[source])
+        lib.print.info('Unloading player: ' .. source)
         local groups =  Players[source].groups
         local permissions =  Players[source].permissions
         local job =  Players[source].job
@@ -206,14 +206,6 @@ function module.Login(source, id)
     end
 
 
-    --sync status data and health
-    local ped = GetPlayerPed(source)
-    local health = GetEntityHealth(ped)
-    
-    if health ~= PlayerData.datatable.health then
-        imod.server.TriggerRpc('SetEntityHealth', source, PlayerData.datatable.health)
-    end
-
     module.Load(source, PlayerData)
 
     module.SetState(source, 'hunger', PlayerData.datatable.hunger, true)
@@ -276,13 +268,15 @@ function module._Save(source, force)
 end
 
 function module._SaveAndUnload(src)
-    module._Save(src, true)
-    module.Unload(src)
+    pcall(module._Save, src, true)
+    pcall(module.Unload, src)    
 end
 
 function module._SaveAllOnlinePlayers()
     for k in next, Players or {} do
-        module._Save(k)
+        if DoesPlayerExist(k) then
+            module._Save(k)
+        end
     end
 end
 
@@ -320,7 +314,12 @@ local function __init__(storage_module, server_module, character_module)
     imod.storage = storage_module
     imod.server = server_module
     imod.character = character_module
-    return setmetatable(_module, { __index = module })
+    return setmetatable(_module, {
+        __index = module,
+        __tostring = function()
+            return _module.name
+        end
+    })
 end
 
 return __init__

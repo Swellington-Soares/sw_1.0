@@ -5,7 +5,7 @@ local modules = {}
 local config = lib.load('shared.config')
 
 modules.client = require '@sw.client.modules.client' ()
-modules.player = require '@sw.client.modules.player' ()
+modules.player = require '@sw.client.modules.player' (modules.client)
 
 for k, v in next, modules do    
     print('Loading module: ' .. v?.name or k:upper())

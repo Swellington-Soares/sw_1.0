@@ -81,10 +81,10 @@ local function enable_rich_presence()
         if app_id == '' then return end
         local icon_large = GetConvar('sw:client:discord_icon_large', '')
         local icon_small = GetConvar('sw:client:discord_icon_small', '')
-        local icon_large_hover_text = GetConvar('sw:client:discord_icon_large_hover_text', '')        
-        local icon_small_hover_text = GetConvar('sw:client:discord_icon_small_hover_text', '')       
+        local icon_large_hover_text = GetConvar('sw:client:discord_icon_large_hover_text', '')
+        local icon_small_hover_text = GetConvar('sw:client:discord_icon_small_hover_text', '')
         local buttons = GetConvar('sw:client:discord_buttons', '')
-        local buttons_table = buttons == '' and {} or json.decode(buttons)        
+        local buttons_table = buttons == '' and {} or json.decode(buttons)
         SetDiscordAppId(app_id)
         SetDiscordRichPresenceAsset(icon_large)
         SetDiscordRichPresenceAssetText(icon_large_hover_text)
@@ -110,6 +110,7 @@ local function init()
     set_dispatch_and_pause_title()
     remove_vehicle_weapons()
     enable_rich_presence()
+   
 end
 
 --map
@@ -167,10 +168,15 @@ AddEventHandler('onResourceStop', function(resource)
 end)
 
 
-local function __init__()
+local function __init__(client)
     init()
     local _module = { name = 'Client' }
-    return setmetatable(_module, { __index = module })
+    return setmetatable(_module, {
+        __index = module,
+        __tostring = function()
+            return _module.name
+        end
+    })
 end
 
 return __init__

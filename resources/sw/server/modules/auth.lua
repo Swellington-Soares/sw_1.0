@@ -148,7 +148,12 @@ end
 local function __init__(storage)
     local _module = { name = 'Auth' }
     injected_modules.storage = storage
-    return setmetatable(_module, { __index = module })
+    return setmetatable(_module, {
+        __index = module,
+        __tostring = function()
+            return _module.name
+        end
+    })
 end
 
 return __init__

@@ -19,7 +19,12 @@ end
 
 local function __init__()
     local _module = { name = 'Email' }
-    return setmetatable(_module, { __index = module })
+    return setmetatable(_module, {
+        __index = module,
+        __tostring = function()
+            return _module.name
+        end
+    })
 end
 
 return __init__
