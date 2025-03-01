@@ -169,6 +169,14 @@ lib.onCache('ped', function()
     init()
 end)
 
+local weapon_block = lib.load('shared.config')?.block_weapons or {}
+
+lib.onCache('weapon', function (value)
+    if not value or value == `weapon_unarmed` then return end
+    if not weapon_block[value] then return end
+    RemoveWeaponFromPed(cache.ped, value)
+end)
+
 local function __init__()
     init_rpc()
     local _module = { name = 'Player' }

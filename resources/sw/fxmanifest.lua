@@ -7,8 +7,8 @@ author "Swellington Soares"
 version "1"
 
 use_experimental_fxv2_oal "yes"
-
-loadscreen_cursor 'yes'
+loadscreen_manual_shutdown 'yes'
+-- loadscreen_cursor 'yes'
 
 shared_scripts {
 	'@ox_lib/init.lua',
@@ -16,8 +16,9 @@ shared_scripts {
 }
 
 client_scripts {
+	'client/modules/client.lua',
 	'client/modules/player.lua',
-	'client/main.lua'
+	'lient/main.lua'
 }
 
 server_scripts {
@@ -35,4 +36,11 @@ dependencies {
 
 ox_lib {
 	'locale'
+}
+
+loadscreen 'loading/index.html'
+
+files {
+	'loading/**',
+	'shared/*.lua'
 }

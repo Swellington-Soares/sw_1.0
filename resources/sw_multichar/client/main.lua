@@ -569,8 +569,10 @@ end
 
 local function run_script()
     create_preview_cam(config.StartPoint.x, config.StartPoint.y, config.StartPoint.z + 150.0, -90.01, 0.0, 0.0, 70.0)
+    ShutdownLoadingScreen()
     NetworkStartSoloTutorialSession()
     while not NetworkIsInTutorialSession() do Wait(0) end
+    ShutdownLoadingScreenNui()
     Wait(500)
     local playerPed = PlayerPedId()
     SetPedDefaultComponentVariation(playerPed)

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SW FRAMEWORK</title>
+    <style>
+        body {
+            background-color: aqua;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #main {
+            width: 100vw;
+            height: 100vh;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        #progressbar {
+            position: absolute;
+            width: 100%;
+            height: 10px;
+            background-color: #000;
+            bottom: 0;
+        }
+
+        #progressbarinner {
+            position: absolute;
+            width: 50%;
+            height: 10px;
+            background-color: #fff;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main">
+        <div id="progressbar">
+            <div id="progressbarinner"></div>
+        </div>
+    </div>
+    <script>
+        const main = document.getElementById('main');
+        const image_name = getRandomIntInclusive(1, 4);
+        const progress = document.getElementById('progressbarinner');
+
+        function getRandomIntInclusive(min, max) {
+            const minCeiled = Math.ceil(min);
+            const maxFloored = Math.floor(max);
+            return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+        }
+
+        const handlers = {
+            loadProgress({ loadFraction }) {
+                progress.style.width = loadFraction * 100 + "%";
+            },
+        };
+
+        main.style.backgroundImage = `url(./images/bk_${image_name}.png)`;
+
+        window.addEventListener("message", function (e) {
+            (handlers[e.data.eventName] || function () { })(e.data);
+        });
+    </script>
+</body>
+
+</html>

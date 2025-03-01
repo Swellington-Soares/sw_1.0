@@ -2,6 +2,7 @@ local require = lib.require
 local old_print = print
 local print = lib.print.info
 local modules = {}
+local config = lib.load('shared.config')
 
 modules.client = require '@sw.client.modules.client' ()
 modules.player = require '@sw.client.modules.player' ()
@@ -15,3 +16,9 @@ for k, v in next, modules do
         end
     end
 end
+
+AddEventHandler('entityCreating', function(entity)
+    if config.block_entity[entity] then
+        CancelEvent()
+    end
+end)
