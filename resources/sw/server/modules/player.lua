@@ -26,11 +26,11 @@ end
 ---@param source number | string
 function module.Unload(source)
     if Players[source] then
-
-        local groups =  Players[source].PlayerData.groups
-        local permissions =  Players[source].PlayerData.permissions
-        local job =  Players[source].PlayerData.job
-        local gang =  Players[source].PlayerData.gang
+        lib.print.info('Unloading player: ' .. Players[source])
+        local groups =  Players[source].groups
+        local permissions =  Players[source].permissions
+        local job =  Players[source].job
+        local gang =  Players[source].gang
 
         for k in next, groups or {} do
             lib.removePrincipal(source, 'group.' .. k)
