@@ -26,7 +26,7 @@ dependencies {
 	'sw',
 	'ox_lib',
 	'oxmysql',
-	-- 'sw_appel',
+	'sw_appearance',
 	'/onesync'
 }
 
