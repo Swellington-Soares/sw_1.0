@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 --[[
 Used as initial data.
 Please do not change here. All settings are in the shared/config.lua file.
