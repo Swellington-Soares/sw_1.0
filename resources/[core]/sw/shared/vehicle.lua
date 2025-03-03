@@ -411,8 +411,8 @@ local VEHICLES <const> = {
         Type = "CAR",
         Seats = 2,
         MonetaryValue = 0,
-        DimensionsMin = null,
-        DimensionsMax = null,
+       
+        
         BoundingCenter = {
             X = 3.58976,
             Y = -3.685272,
@@ -744,8 +744,8 @@ local VEHICLES <const> = {
         Type = "CAR",
         Seats = 4,
         MonetaryValue = 0,
-        DimensionsMin = null,
-        DimensionsMax = null,
+       
+        
         BoundingCenter = {
             X = 3.58976,
             Y = -3.685272,
@@ -5882,8 +5882,8 @@ local VEHICLES <const> = {
         Type = "CAR",
         Seats = 2,
         MonetaryValue = 0,
-        DimensionsMin = null,
-        DimensionsMax = null,
+       
+        
         BoundingCenter = {
             X = 3.58976,
             Y = -3.685272,
@@ -11237,8 +11237,8 @@ local VEHICLES <const> = {
         Type = "CAR",
         Seats = 2,
         MonetaryValue = 0,
-        DimensionsMin = null,
-        DimensionsMax = null,
+       
+        
         BoundingCenter = {
             X = 3.58976,
             Y = -3.685272,
@@ -19227,8 +19227,8 @@ local VEHICLES <const> = {
         Type = "CAR",
         Seats = 2,
         MonetaryValue = 0,
-        DimensionsMin = null,
-        DimensionsMax = null,
+       
+        
         BoundingCenter = {
             X = 3.58976,
             Y = -3.685272,
