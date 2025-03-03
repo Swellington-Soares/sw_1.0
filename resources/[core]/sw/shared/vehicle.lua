@@ -27490,12 +27490,26 @@ local function GetByModel(model)
 end
 
 local function GetVehiclesByClassName(classIdOrName)
+    
     if type(classIdOrName) == 'number' then
         classIdOrName = vehicle_class[classIdOrName]
         if not classIdOrName then return {} end
     end
 
     classIdOrName = classIdOrName:upper()
+
+    --check if is a valid class
+    local is_valid_class = false
+
+    for _, v in next, vehicle_class do
+        if v == classIdOrName then
+            is_valid_class = true
+            break
+        end
+    end
+
+    if not is_valid_class then return {} end
+
 
     local d = {}
     for _, v in next, VEHICLES or {} do
