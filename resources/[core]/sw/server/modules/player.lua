@@ -5,6 +5,26 @@ local Players = {}
 
 GlobalState.PlayerCount = 0
 
+local func_perms = {} -- special permission created by user
+
+local jobs = lib.require 'shared.jobs'
+local gangs = lib.require 'shared.gangs'
+
+local default_job  <const> = {
+    name = 'unemployed',
+    label = 'Desempregado',
+    grade = 0,
+    gradeName = 'Unemployed',
+}
+
+local default_gang <const> = {
+    name = 'none',
+    label = 'Nenhum',
+    gradeName = 'None',
+    grade = 0,
+}
+
+
 ---Get Online Player from PlayerList
 ---@param source PlayerSource
 ---@return table
@@ -27,10 +47,10 @@ end
 function module.Unload(source)
     if Players[source] then
         lib.print.info('Unloading player: ' .. source)
-        local groups =  Players[source].groups
-        local permissions =  Players[source].permissions
-        local job =  Players[source].job
-        local gang =  Players[source].gang
+        local groups = Players[source].groups
+        local permissions = Players[source].permissions
+        local job = Players[source].job
+        local gang = Players[source].gang
 
         for k in next, groups or {} do
             lib.removePrincipal(source, 'group.' .. k)
@@ -167,7 +187,8 @@ local function CreatePlayerData(newdata)
     money.bank = money?.bank or GetConvarInt('sw:startbank', 10000)
     PlayerData.money = money
     PlayerData.permissions = PlayerData?.permissions or {}
-    PlayerData.job = PlayerData?.job or { name = 'unemployed', label = 'Unemployed', grade = 0, gradeName = 'Unemployed' }
+    PlayerData.job = PlayerData?.job or
+        { name = 'unemployed', label = 'Unemployed', grade = 0, gradeName = 'Unemployed' }
     PlayerData.gang = PlayerData?.gang or { name = 'none', label = 'None', gradeName = 'None', grade = 0 }
 
     return PlayerData
@@ -179,7 +200,7 @@ function module.Login(source, id)
     local character = imod.character.CharacterGetOne(id)
     if not character or character?.license ~= license then
         imod.server.Ban(license, 'Tentativa de login com personagem inválido')
-        DropPlayer(source, 'Tentativa de login com personagem inválido')        
+        DropPlayer(source, 'Tentativa de login com personagem inválido')
         return false
     end
 
@@ -219,8 +240,8 @@ function module.Login(source, id)
     module.SetState(source, 'alcohol', PlayerData.datatable.alcohol, true)
 
     TriggerClientEvent('Player:SyncData', source, PlayerData)
-    TriggerClientEvent('Player:SyncJob', source, PlayerData.job)
-    TriggerClientEvent('Player:SyncGang', source, PlayerData.gang)
+    TriggerClientEvent('Player:SyncJob', source, 'set', PlayerData.job)
+    TriggerClientEvent('Player:SyncGang', source, 'set', PlayerData.gang)
     TriggerClientEvent('Player:SyncMoney', source, PlayerData.money)
 
     TriggerEvent('player:login', source, { user_id = PlayerData.user_id, char_id = id })
@@ -269,7 +290,7 @@ end
 
 function module._SaveAndUnload(src)
     pcall(module._Save, src, true)
-    pcall(module.Unload, src)    
+    pcall(module.Unload, src)
 end
 
 function module._SaveAllOnlinePlayers()
@@ -307,6 +328,178 @@ RegisterNetEvent('Player:Server:Money', function(action, money_type, value)
     end
     TriggerClientEvent('Player:SyncMoney', source, Players[source].money, action, money_type, value)
 end)
+
+
+
+function module.SetGroup(source, group)
+    if not source or not Players[source] or not group then return end
+    local src = tonumber(source)
+    if not module.HasGroup(source, group) then
+        Players[source].groups[group] = true
+        TriggerClientEvent('Player:SyncGroups', source, Players[source].groups)
+        TriggerClientEvent('Player:SyncData', source, PlayerData)
+        lib.addPrincipal(src, 'group.' .. group)
+        return true
+    end
+    return false
+end
+
+function module.RemoveGroup(source, group)
+    if not source or not Players[source] or not group then return end
+    local src = tonumber(source)
+    if module.HasGroup(source, group) then
+        Players[source].groups[group] = nil
+        TriggerClientEvent('Player:SyncGroups', source, Players[source].groups)
+        TriggerClientEvent('Player:SyncData', source, PlayerData)
+        lib.removePrincipal(src, 'group.' .. group)
+        return true
+    end
+    return false
+end
+
+function module.AddPermission(source, permission)
+    if not source or not Players[source] or not permission then return end
+    local src = tonumber(source)
+    if not module.HasPermissions(source, permission) then
+        Players[source].permissions[permission] = true
+        TriggerClientEvent('Player:SyncPermissions', source, Players[source].permissions)
+        TriggerClientEvent('Player:SyncData', source, PlayerData)
+        lib.addAce(src, permission, 'allow')
+        return true
+    end
+end
+
+function module.RemovePermission(source, permission)
+    if not source or not Players[source] or not permission then return end
+    local src = tonumber(source)
+    if module.HasPermissions(source, permission) then
+        Players[source].permissions[permission] = nil
+        lib.removeAce(src, permission, 'allow')
+        TriggerClientEvent('Player:SyncPermissions', source, Players[source].permissions)
+        TriggerClientEvent('Player:SyncData', source, PlayerData)
+        return true
+    end
+end
+
+function module.HasPermissions(source, permission)
+    if not source or not Players[source] or not permission then return false end
+    local src = tonumber(source)
+    if IsPlayerAceAllowed(src, permission) then return true end
+    if type(permission) == 'table' then
+        for _, v in next, permission do
+            if module.HasPermissions(src, v) then
+                return true
+            end
+        end
+    else
+        local is_opt = permission:sub(1, 1) == '!'
+        if is_opt then
+            local parts = lib.string.strsplit(permission:sub(2), '.') or {}
+            if #parts > 0 then
+                local fperm = func_perms[parts[1]]
+                return fperm and fperm(src, parts) or false
+            end
+        else
+            local is_negative = permission:sub(1, 1) == '-'
+            permission = permission:sub(2)
+            if is_negative then
+                if IsPlayerAceAllowed(src, permission) then
+                    lib.removeAce(src, permission, 'allow')
+                    lib.addAce(src, permission, 'deny')
+                    return false
+                else
+                    return true
+                end
+            end
+        end
+    end
+    return IsPlayerAceAllowed(src, permission)
+end
+
+function module.HasGroup(source, group)
+    if not source or not Players[source] or not group then return false end
+    return Players[source].groups[group] or IsPlayerAceAllowed(source, 'group.' .. group) or false
+end
+
+function module.SetJob(source, job, rank)
+    if not source or not Players[source] or not job then return end
+    if not jobs[job] then return false, "Serviço com ID: [ " .. job .. "] inválido." end
+    local jobinfo = jobs[job]
+
+    if not jobinfo.ranks[rank] then
+        return false, "Rank com ID: [ " .. rank .. "] inválido."
+    end
+
+    if Players[source].job and Players[source].job.name == job and Players[source].job.grade == rank then
+        return false, "Você já está com este serviço."
+    end
+
+    if Players[source].job and Players[source].job.name ~= 'unemployed' then
+        module.RemoveJob(source, Players[source].job.name)
+    end
+
+    Players[source].job = {
+        name = job,
+        label = jobinfo.label,
+        grade = rank,
+        gradeName = jobinfo.ranks[rank].label,
+    }
+
+    TriggerClientEvent('Player:SyncJob', source, 'set', Players[source].job)
+    TriggerClientEvent('Player:SyncData', source, Players[source])
+    return true
+end
+
+function module.SetGang(source, gang, rank)
+    if not source or not Players[source] or not gang then return end
+    if not gangs[gang] then return false, "Gang com ID: [ " .. gang .. "] inválido." end
+
+    local ganginfo = gangs[gang]
+    if not ganginfo.ranks[rank] then
+        return false, "Rank com ID: [ " .. rank .. "] inválido."
+    end
+
+    if Players[source].gang and Players[source].gang.name == gang and Players[source].gang.rank == rank then
+        return false, "Você já está nessa gangue"
+    end
+
+    if Players[source].gang and Players[source].gang.name ~= 'none' then
+        module.RemoveGang(source, Players[source].gang.name)
+    end
+
+    Players[source].gang = {
+        name = gang,
+        label = ganginfo.label,
+        grade = rank,
+        gradeName = ganginfo.ranks[rank].label,
+    }
+
+    TriggerClientEvent('Player:SyncGang', source, 'set', Players[source].gang)
+    TriggerClientEvent('Player:SyncData', source, Players[source])
+
+    return true
+end
+
+function module.RemoveJob(source, job)
+    if not source or not Players[source] or not job then return false end
+    if Players[source].job and Players[source].job.name ~= job then return false end
+    Players[source].job = default_job
+
+    TriggerClientEvent('Player:SyncJob', source, 'remove', job, Players[source].job)
+    TriggerClientEvent('Player:SyncData', source, Players[source])
+
+    return true
+end
+
+function module.RemoveGang(source, gang)
+    if not source or not Players[source] or not gang then return false end
+    if Players[source].gang and Players[source].gang.name ~= gang then return false end
+    Players[source].gang = default_gang
+    TriggerClientEvent('Player:SyncGang', source, 'remove', gang, Players[source].gang)
+    TriggerClientEvent('Player:SyncData', source, Players[source])
+    return true
+end
+
 
 
 local function __init__(storage_module, server_module, character_module)
