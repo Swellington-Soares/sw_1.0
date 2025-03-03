@@ -314,7 +314,7 @@ local function show_new_char_screen()
         if not input then
             lib.notify({
                 title = 'Novo Personagem',
-                description = 'Verifique os campos e tende novamente.',
+                description = 'Verifique os campos e tente novamente.',
                 type = 'error',
                 position = 'top',
                 style = {
