@@ -10,7 +10,7 @@ local func_perms = {} -- special permission created by user
 local jobs = lib.require 'shared.jobs'
 local gangs = lib.require 'shared.gangs'
 
-local default_job  <const> = {
+local default_job <const> = {
     name = 'unemployed',
     label = 'Desempregado',
     grade = 0,
@@ -48,7 +48,7 @@ function module.Unload(source)
     if Players[source] then
         lib.print.info('Unloading player: ' .. source)
 
-        local PlayerData = table.clone( Players[source].PlayerData )
+        local PlayerData = table.clone(Players[source].PlayerData)
 
 
         local groups = PlayerData.groups
@@ -298,13 +298,14 @@ function module._Save(source, force)
 end
 
 function module._SaveAndUnload(src)
+    if not Players[src]?.ready then return end
     pcall(module._Save, src, true)
     pcall(module.Unload, src)
 end
 
 function module._SaveAllOnlinePlayers()
     for k in next, Players or {} do
-        if DoesPlayerExist(k) then
+        if Players[k]?.ready and DoesPlayerExist(k) and not Players[k]?.saving then
             module._Save(k)
         end
     end
@@ -509,7 +510,16 @@ function module.RemoveGang(source, gang)
     return true
 end
 
+function module._SetPlayerReady(source, value)
+    if not source or not Players[source] then return end
+    Players[source].ready = value
+end
 
+function module._SetAsDead(source, value)
+    if not source or not Players[source] then return end
+    Players[source].PlayerData.metadata['isdead'] = value
+    Players[source].PlayerData.metadata['health'] = 0
+end
 
 local function __init__(storage_module, server_module, character_module)
     local _module = { name = 'Player', exp_prefix = 'Player', }
