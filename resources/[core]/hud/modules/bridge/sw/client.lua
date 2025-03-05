@@ -1,5 +1,6 @@
 -- Adds a state bag change handler for 'isLoggedIn'
 AddStateBagChangeHandler('isLoggedIn', nil, function(_, _, isLoggedIn)
+    print('isLoggedIn', 'isLoggedIn')
     client.onPlayerLoad(isLoggedIn)
 end)
 
@@ -41,6 +42,7 @@ end
 -- Checks if the player is logged in based on local player state
 ---@return boolean isLoggedIn
 function client.IsPlayerLoaded()
+    print('client.IsPlayerLoaded()', LocalPlayer.state.isLoggedIn)
     return LocalPlayer.state.isLoggedIn
 end
 

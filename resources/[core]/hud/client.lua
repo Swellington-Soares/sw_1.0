@@ -9,9 +9,7 @@ PlayerData = {}
 
 require 'modules.bridge.client'
 
-local Utils = require 'modules.utils.client'
 local Hud = require 'modules.hud.client'
-local Music = require 'modules.music.client'
 local CarControl = require 'modules.car_control.client'
 local Seatbelt = require 'modules.seatbelt.client'
 
@@ -113,6 +111,7 @@ local function registerCommands()
 end
 
 function client.onPlayerLoad(isLoggedIn)
+    lib.print.info(isLoggedIn)
     client.load = isLoggedIn
     if isLoggedIn then
         if registerCommands then registerCommands() end
