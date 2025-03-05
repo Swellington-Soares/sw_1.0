@@ -13,7 +13,7 @@ end
 function module.CharacterGetOne(id)
     local character = imod.storage.Single('SELECT * FROM view_player WHERE char_id = ?', { id })
     if not character then return end
-    character.datatable = character.datatable and json.decode(character.datatable) or {}
+    character.metadata = character.metadata and json.decode(character.metadata) or {}
     character.groups = character.groups and json.decode(character.groups)
     character.lastposition = character.lastposition and json.decode(character.lastposition)
     character.job = character.job and json.decode(character.job) 
@@ -33,7 +33,7 @@ function module.CharacterGetAll(license, exclude_delete)
     local characters = imod.storage.Fetch(q, { license })
     if not characters then return end
     for k in next, characters do
-        characters[k].datatable = characters[k].datatable and json.decode(characters[k].datatable) or {}
+        characters[k].metadata = characters[k].metadata and json.decode(characters[k].metadata) or {}
         characters[k].groups = characters[k].groups and json.decode(characters[k].groups) or {}
         characters[k].lastposition = characters[k].lastposition and json.decode(characters[k].lastposition) or {}
         characters[k].job = characters[k].job and json.decode(characters[k].job) or {}

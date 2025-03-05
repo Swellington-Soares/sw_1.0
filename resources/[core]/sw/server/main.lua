@@ -179,5 +179,18 @@ local function player_save_thread()
     end
 end
 
+AddStateBagChangeHandler('ready', nil, function(bagName, _, value)
+    local player = GetPlayerFromStateBagName(bagName)
+    if player == 0 then return end
+    modules.player._SetPlayerReady(player, value)
+end)
+
+
+AddStateBagChangeHandler('isDead', nil, function(bagName, _, value)
+    local player = GetPlayerFromStateBagName(bagName)
+    if player == 0 then return end
+    modules.player._SetAsDead(player, value)
+end)
+
 CreateThread(player_save_thread)
 
