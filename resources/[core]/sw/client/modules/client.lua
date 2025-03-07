@@ -109,8 +109,7 @@ local function init()
     set_relationships()
     set_dispatch_and_pause_title()
     remove_vehicle_weapons()
-    enable_rich_presence()
-   
+    enable_rich_presence()   
 end
 
 --map

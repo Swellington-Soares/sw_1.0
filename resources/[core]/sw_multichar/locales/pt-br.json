@@ -1,0 +1,52 @@
+{
+    "find_account_info": "Verificando informações da conta...",
+    "loading_chars": "Carregando informações dos persnagens...",
+    "menu": {
+        "new_char": "Novo Personagem",
+        "select": "SELECIONAR",
+        "next": "PRÓXIMO",
+        "prev": "ANTERIOR",
+        "delete": "DELETAR",
+        "header": "Selecionar Personagem",
+        "content": "Você tem certeza que deseja selecionar este personagem?",
+        "content_not_allow_to_delete": "Você não pode selecionar este personagem.",
+        "field_error": "Verifique os campos e tente novamente."
+    },
+    "deleted_char": "~h~PERSONAGEM DELETADO~h~",
+    "new_char": "NOVO PERSONAGEM?",
+    "form": {
+        "input1":{
+            "label": "Nome",
+            "description": "O nome do personagem"
+        },
+        "input2":{
+            "label": "Sobrenome",
+            "description": "O sobrenome do personagem"
+        },
+        "input3":{
+            "label": "Sexo",
+            "description": "Selecione o Sexo do personagem",
+            "options": {
+                "M": "Masculino",
+                "F": "Feminino"
+            }
+        },
+        "input4":{
+            "label": "Data de nascimento",
+            "format": "DD/MM/YYYY"
+        }
+    },
+    "loading_char": "Carregando informações de ~g~~h~[ %s ]~h~~w~",
+    "delete_char_error": "Você não pode deletar o personagem %s, pois ele está em uso.",
+    "delete_char_title": "Deletar Personagem",
+    "validations": {
+        "v1": "Nome deve ter entre 4 e 16 caracteres",
+        "v2": "Sobrenome deve ter entre 4 e 16 caracteres",
+        "v3": "Sexo deve ser Masculino ou Feminino",
+        "v4": "Data de nascimento inválida.",
+        "v5": "O personage deve ter 18 anos ou mais",
+        "v6": "Você já atingiu o limite de personagens permitidos"            
+    },
+    "succes_creation": "Personagem criado com sucesso!",
+    "error_creation": "Erro ao criar o personagem. Entre em contato com o suporte."
+}

@@ -1,7 +1,6 @@
 local module = {}
 local PlayerData = {}
 local anims = {}
-local imod = {}
 
 function module.StartPlayerTeleport(x, y, z)
     local entity = GetVehiclePedIsIn(cache.ped, false)
@@ -34,10 +33,6 @@ end
 
 function module.GetPlayerData()
     return PlayerData
-end
-
-function module.SetPlayerData(key, value)
-    PlayerData[key] = value
 end
 
 local function sync_job(job)
@@ -134,6 +129,10 @@ function module.StopAnim(upper, force)
     end
 end
 
+function module.SetPlayerReady(ready)
+    LocalPlayer.state:set('ready', ready, true)
+    LocalPlayer.state:set('isLoggedIn', true, true)
+end
 
 --events
 RegisterNetEvent('Player:SyncJob', sync_job)

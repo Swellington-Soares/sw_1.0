@@ -255,7 +255,7 @@ function module.Login(source, id)
 
     TriggerEvent('player:login', source, { user_id = PlayerData.user_id, char_id = id })
 
-    Player(source).state:set('isLoggedIn', true, true)
+    -- Player(source).state:set('isLoggedIn', true, true)
 
     return true, PlayerData.lastposition
 end

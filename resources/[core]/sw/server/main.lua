@@ -8,7 +8,7 @@ modules.storage = require '@sw.server.modules.storage' ()
 modules.server = require '@sw.server.modules.server' (modules.storage)
 modules.character = require '@sw.server.modules.character' (modules.storage)
 modules.player = require '@sw.server.modules.player' (modules.storage, modules.server, modules.character)
-modules.hooks = require '@sw.server.modules.hook' (modules.storage)
+modules.hooks = require '@sw.shared.modules.hook' ()
 modules.auth = require '@sw.server.modules.auth' (modules.storage)
 modules.email = require '@sw.server.modules.email' ()
 

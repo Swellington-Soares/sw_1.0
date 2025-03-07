@@ -61,16 +61,16 @@ lib.callback.register('sw_multichar:server:createNewCharacter', function(source,
     local license = exports.sw:GetPlayerIdentifier( source, 'license' )
     local _d = os.date('*t', birthdate // 1000)
     if os.date('*t', os.time()).year - _d.year < 18 then
-        return false, 'O personage deve ter 18 anos ou mais'
+        return false, locale('validations.v5')
     end
     if not firstname or firstname:len() < 4 or firstname:len() > 16 then
-        return false, 'Nome deve ter entre 4 e 16 caracteres'
+        return false, locale('validations.v1')
     end
     if not lastname or lastname:len() < 4 or lastname:len() > 16 then
-        return false, 'Sobrenome deve ter entre 4 e 16 caracteres'
+        return false, locale('validations.v2')
     end
     if not sex or (sex ~= 'M' and sex ~= 'F') then
-        return false, 'Sexo deve ser M ou F'
+        return false, locale('validations.v3')
     end
 
     local current_char_count = exports.sw:GetUserCharactersCount( license ) 
@@ -79,7 +79,7 @@ lib.callback.register('sw_multichar:server:createNewCharacter', function(source,
     allowed_chars = allowed_chars and tonumber(allowed_chars) or config.MaxPlayerCharacters
 
     if current_char_count >= allowed_chars then        
-        return false, 'Você já atingiu o limite de personagens permitidos'
+        return false, locale('validations.v6')
     end
 
     local id = exports.sw:CreateCharacter({
@@ -91,10 +91,10 @@ lib.callback.register('sw_multichar:server:createNewCharacter', function(source,
     })
 
     if id then
-        return true, 'Personagem criado com sucesso', id
+        return true, locale('succes_creation'), id
     end
 
-    return false, 'Erro ao criar o personagem. Entre em contato com o suporte.'
+    return false, locale('error_creation')
     
 end)
 

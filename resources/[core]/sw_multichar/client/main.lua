@@ -12,6 +12,7 @@ local preview_slots = {}
 local preview_cam
 local allow_max = 4
 local in_selector = true
+local in_creator = true
 local current_index = 1
 local is_cam_moving = false
 local current_chars = {}
@@ -53,19 +54,19 @@ end
 local function is_new_char_input_valid(firstname, lastname, sex, birthdate)
     local v1 = firstname and firstname:len() >= 4 and firstname:len() <= 16
     if not v1 then
-        return false, 'Nome deve ter entre 4 e 16 caracteres'
+        return false, locale('validations.v1')
     end
     local v2 = lastname and lastname:len() >= 4 and lastname:len() <= 16
     if not v2 then
-        return false, 'Sobrenome deve ter entre 4 e 16 caracteres'
+        return false, locale('validations.v2')
     end
     local v3 = sex and sex:len() == 1 and (sex == 'M' or sex == 'F')
     if not v3 then
-        return false, 'Sexo deve ser M ou F'
+        return false, locale('validations.v3')
     end
     local v4 = birthdate > 0
     if not v4 then
-        return false, 'Data de nascimento deve ser maior que 0'
+        return false, locale('validations.v4')
     end
     return true
 end
@@ -91,8 +92,8 @@ end
 
 local function show_not_deleted_char_message(char_name)
     lib.notify({
-        title = 'Deletar Personagem',
-        description = 'Você não pode deletar o personagem ' .. char_name .. ' pois ele está em uso.',
+        title = locale('delete_char_title'),
+        description = locale('delete_char_error', char_name),
         type = 'error',
         position = 'top',
         duration = 10000,
@@ -176,7 +177,7 @@ local function prepare_preview_char(slot, character)
         SetPedHeadBlendData(preview_ped, 0, 0, 0, 1, 0, 0, 0, 0, 0, false)
         SetPedDefaultComponentVariation(preview_ped)
     else
-        create_screen_text_ui(('Buscando [ %s ]...'):format(character.fullName), 0.5, 0.5, 1.0)
+        create_screen_text_ui(locale('loading_char', character.fullName), 0.5, 0.5, 1.0)
         local _nmodel = lib.requestModel(character?.skin?.model or model, 10000)
         preview_ped = CreatePed(23, _nmodel, slot_data.spawn.x, slot_data.spawn.y, slot_data.spawn.z, slot_data.spawn.w,
             false, false)
@@ -203,7 +204,7 @@ local function prepare_preview_char(slot, character)
 
     if character?.deleted_at then
         start_deleted_animation(preview_ped)
-        character.fullName = 'DELETED'
+        character.fullName = locale('deleted_char')
     end
 
     preview_slots[slot] = preview_ped
@@ -249,6 +250,7 @@ local function do_edit_char(char_id, sex)
     Wait(0)
     DoScreenFadeIn(0)
     exports.sw_appearance:startPlayerCustomization(function(data)
+        in_creator = false
         TriggerServerEvent('sw:player:update_player_skin', char_id, data)
         if config.EnableIntro then
             TriggerEvent('sw_multichar:client:intro')
@@ -278,34 +280,32 @@ local function show_new_char_screen()
 
     while is_creating do
         Wait(0)
-        local input = lib.inputDialog('Novo Personagem', {
-            { type = 'input', label = 'Nome',      description = 'O nome do personagem',      required = true, min = 4, max = 16 },
-            { type = 'input', label = 'Sobrenome', description = 'O sobrenome do personagem', required = true, min = 4, max = 16 },
+        local input = lib.inputDialog(locale('menu.new_char'), {
+            { type = 'input', label = locale('form.input1.label'),      description = locale('form.input1.description'),      required = true, min = 4, max = 16 },
+            { type = 'input', label = locale('form.input2.label'), description = locale('form.input2.description'), required = true, min = 4, max = 16 },
             {
                 type = 'select',
-                label = 'Sexo',
-                description = 'Selecione o sexo do personagem',
+                label = locale('form.input3.label'),
+                description = locale('form.input3.description'),
                 required = true,
                 default = 'M',
                 options = {
                     {
-                        label = 'Masculino',
-                        description = 'Sexo masculino',
+                        label = locale('form.input3.options.M'),                        
                         value = 'M'
                     },
                     {
-                        label = 'Feminino',
-                        description = 'Sexo feminino',
+                        label = locale('form.input3.options.F'),
                         value = 'F'
                     }
                 }
             },
             {
                 type = 'date',
-                label = 'Data de nascimento',
+                label = locale('form.input4.label'),
                 icon = { 'far', 'calendar' },
                 required = true,
-                format = "DD/MM/YYYY"
+                format = locale('form.input4.format')
             }
         }, {
             allowCancel = true
@@ -313,8 +313,8 @@ local function show_new_char_screen()
 
         if not input then
             lib.notify({
-                title = 'Novo Personagem',
-                description = 'Verifique os campos e tente novamente.',
+                title = locale('menu.new_char'),
+                description = locale('field_error'),
                 type = 'error',
                 position = 'top',
                 style = {
@@ -330,7 +330,7 @@ local function show_new_char_screen()
             local isValid, message = is_new_char_input_valid(firstname, lastname, sex, birthdate)
             if not isValid then
                 lib.notify({
-                    title = 'Novo Personagem',
+                    title = locale('menu.new_char'),
                     description = message,
                     type = 'error',
                     position = 'top',
@@ -343,7 +343,7 @@ local function show_new_char_screen()
                     firstname, lastname, sex, birthdate)
                 if not char_created then
                     lib.notify({
-                        title = 'Novo Personagem',
+                        title = locale('menu.new_char'),
                         description = message,
                         type = 'error',
                         position = 'top',
@@ -391,7 +391,7 @@ local function start_selection_controls()
                         current_index = current_index + 1
                     end
                     update_selecion_cam()
-                    local message = current_chars[current_index]?.fullName or 'NOVO PERSONAGEM?'
+                    local message = current_chars[current_index]?.fullName or locale('new_char')
                     create_screen_text_ui('~h~' .. message .. '~h~', 0.5, 0.90, 1.2)
                 elseif IsDisabledControlJustPressed(0, cButtons['LEFT']) then
                     if current_index - 1 < 1 then
@@ -400,7 +400,7 @@ local function start_selection_controls()
                         current_index = current_index - 1
                     end
                     update_selecion_cam()
-                    local message = current_chars[current_index]?.fullName or 'NOVO PERSONAGEM?'
+                    local message = current_chars[current_index]?.fullName or locale('new_char')
                     create_screen_text_ui('~h~' .. message .. '~h~', 0.5, 0.90, 1.2)
                 elseif IsDisabledControlJustPressed(0, cButtons['SELECT']) then
                     if not current_chars[current_index] then
@@ -409,8 +409,8 @@ local function start_selection_controls()
                         end
                     elseif current_chars[current_index]?.deleted_at then
                         lib.notify({
-                            title = 'Selecionar Personagem',
-                            description = 'Você não pode selecionar este personagem.',
+                            header =  locale('menu.header'),
+                            description = locale('content_not_allow_to_delete'),
                             type = 'error',
                             position = 'top',
                             duration = 8000,
@@ -420,17 +420,17 @@ local function start_selection_controls()
                         })
                     else
                         local input_dialog = lib.alertDialog({
-                            header = 'Selecionar Personagem',
-                            content =
-                            'Você tem certeza que deseja selecionar este personagem?',
+                            header =  locale('menu.header'),
+                            content = locale('menu.content'),
                             centered = true,
                             cancel = true
                         })
                         if input_dialog ~= 'confirm' then goto continue end
                         do_login(current_chars[current_index].char_id,
-                            function(result, is_first_login, position)
+                            function(result, is_first_login, position)                                
                                 if not result then return end
                                 if not position or not position?.x then position = nil end
+                                in_creator = false
                                 SetEntityVisible(PlayerPedId(), true, true)
                                 FreezeEntityPosition(PlayerPedId(), false)
                                 local skin = current_chars[current_index].skin
@@ -460,7 +460,7 @@ local function start_selection_controls()
                                     if result then
                                         start_deleted_animation(preview_slots[current_index])
                                         current_chars[current_index].deleted_at = true
-                                        current_chars[current_index].fullName = '~h~DELETED~h~'
+                                        current_chars[current_index].fullName = locale('deleted_char')
                                         create_screen_text_ui('~h~' .. current_chars[current_index]?.fullName .. '~h~',
                                             0.5, 0.90, 1.2)
                                     else
@@ -490,6 +490,10 @@ local _start_control_help_started = false
 local function start_control_help()
     if not _start_control_help_started then
         _start_control_help_started = true
+        local k1 = locale('menu.select')
+        local k2 = locale('menu.next')
+        local k3 = locale('menu.prev')
+        local k4 = locale('menu.delete')
         CreateThread(function()
             local ButtonsHandle = RequestScaleformMovie('INSTRUCTIONAL_BUTTONS')
             while not HasScaleformMovieLoaded(ButtonsHandle) do Wait(0) end
@@ -504,25 +508,25 @@ local function start_control_help()
             PushScaleformMovieFunction(ButtonsHandle, "SET_DATA_SLOT")
             PushScaleformMovieFunctionParameterInt(0)
             ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(2, 175, true))
-            button_caption("PRÓXIMO")
+            button_caption(k2)
             PopScaleformMovieFunctionVoid()
 
             PushScaleformMovieFunction(ButtonsHandle, "SET_DATA_SLOT")
             PushScaleformMovieFunctionParameterInt(1)
             ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(2, 174, true))
-            button_caption("ANTERIOR")
+            button_caption(k3)
             PopScaleformMovieFunctionVoid()
 
             PushScaleformMovieFunction(ButtonsHandle, "SET_DATA_SLOT")
             PushScaleformMovieFunctionParameterInt(2)
             ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(2, 178, true))
-            button_caption("DELETAR")
+            button_caption(k4)
             PopScaleformMovieFunctionVoid()
 
             PushScaleformMovieFunction(ButtonsHandle, "SET_DATA_SLOT")
             PushScaleformMovieFunctionParameterInt(3)
             ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(2, 191, true))
-            button_caption("SELECIONAR")
+            button_caption(k1)
             PopScaleformMovieFunctionVoid()
 
 
@@ -544,7 +548,7 @@ local function request_chars()
     lib.callback('sw_multichar:server:getCharacters', false, function(chars, max)
         allow_max = max
         current_chars = chars
-        create_screen_text_ui('Carregando personagens...', 0.5, 0.5, 1.0)
+        create_screen_text_ui(locale('loading_chars'), 0.5, 0.5, 1.0)
         Wait(1000)
         if #chars == 0 then
             create_screen_text_ui('')
@@ -567,6 +571,23 @@ end
 
 -- exports.spawnmanager:setAutoSpawn(false)
 
+local function SetTimeAndWeather()    
+    CreateThread(function()
+        --exports.sw_weather_sync:SetEnable(false)
+        while in_creator do
+            Wait(1000)
+            SetWeatherTypePersist('EXTRASUNNY')
+            SetWeatherTypeNowPersist('EXTRASUNNY')
+            SetWeatherTypeNow('EXTRASUNNY')
+            SetOverrideWeather('EXTRASUNNY')
+            SetWeatherOwnedByNetwork(false)
+            NetworkOverrideClockTime(12, 0, 0)
+            SetCanAttackFriendly(PlayerPedId(), false, false)
+        end
+        SetCanAttackFriendly(PlayerPedId(), true, true)
+    end)
+end
+
 local function run_script()
     create_preview_cam(config.StartPoint.x, config.StartPoint.y, config.StartPoint.z + 150.0, -90.01, 0.0, 0.0, 70.0)
     ShutdownLoadingScreen()
@@ -578,14 +599,17 @@ local function run_script()
     SetPedDefaultComponentVariation(playerPed)
     FreezeEntityPosition(playerPed, true)
     SetEntityVisible(playerPed, false, false)
+    SetEntityInvincible(playerPed, true)
     Wait(1000)
-    create_screen_text_ui('Verificando personagens...', 0.5, 0.5, 1.0)
+    create_screen_text_ui(locale('find_account_info'), 0.5, 0.5, 1.0)
     Wait(500)
     request_chars()
 end
 
 CreateThread(function()
     while not NetworkIsPlayerActive(PlayerId()) do Wait(0) end
+    LocalPlayer.state:set('isLoggedIn', false, true)
+    Wait(1000)
     exports.spawnmanager:unlockSpawn()
     exports.spawnmanager:spawnPlayer({
         model = `mp_m_freemode_01`,
@@ -598,9 +622,11 @@ CreateThread(function()
         lib.closeAlertDialog()
         lib.closeInputDialog()
         --exports.sw_timesync:StopSync( true )
-        ClearAreaOfPeds(config.StartPoint.x, config.StartPoint.y, config.StartPoint.z, 100.0, true)
-        ClearAreaOfVehicles(config.StartPoint.x, config.StartPoint.y, config.StartPoint.z, 100.0, true)
+        ClearAreaOfPeds(config.StartPoint.x, config.StartPoint.y, config.StartPoint.z, 100.0, 0)
+        ClearAreaOfVehicles(config.StartPoint.x, config.StartPoint.y, config.StartPoint.z, 100.0, 0)
+        ClearAreaOfCops(config.StartPoint.x, config.StartPoint.y, config.StartPoint.z, 100.0, 0)        
         ClearPlayerWantedLevel(PlayerId())
+        SetTimeAndWeather()
         Wait(1000)
         run_script()
     end)
