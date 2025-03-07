@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
-name "sw"
+name "SW Framework"
 description "Swellington Framework"
 author "Swellington Soares"
 version "1"
