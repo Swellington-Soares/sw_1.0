@@ -84,8 +84,7 @@ local function freezePlayer(id, freeze)
     end
 end
 
-local function spawnPlayer(spawnIdx, cb)
-    print(spawnLock)
+local function spawnPlayer(spawnIdx, cb)    
     if spawnLock then return end
     spawnLock = true
     

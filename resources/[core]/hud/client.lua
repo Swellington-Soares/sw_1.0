@@ -110,8 +110,7 @@ local function registerCommands()
     registerCommands = nil
 end
 
-function client.onPlayerLoad(isLoggedIn)
-    lib.print.info(isLoggedIn)
+function client.onPlayerLoad(isLoggedIn)    
     client.load = isLoggedIn
     if isLoggedIn then
         if registerCommands then registerCommands() end
@@ -149,7 +148,6 @@ end)
 RegisterNUICallback('nui:onLoadUI', function(_, resultCallback)
     resultCallback(true)
     client.uiLoad = true
-    lib.print.info('ok: client.SetupUI')
 end)
 
 RegisterNUICallback('nui:hideFrame', function(_, resultCallback)

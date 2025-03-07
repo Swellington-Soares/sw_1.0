@@ -1,5 +1,5 @@
 local module = {}
-
+local events = {}
 
 ---Set global server runtime data
 ---@param key string
@@ -52,6 +52,17 @@ end
 function module.TriggerRpc(func_name, source, ...)
     if not source or source == 0 or source == '0' then return end
     return lib.callback.await('RPC::' .. func_name, source, ...)
+end
+
+function module.RegisterEvent(event_name, callback)
+    if not event_name or not callback then return end
+    events[event_name] = callback
+end
+
+
+function module.TriggerEvent(event_name, ...)
+    if not event_name or not events[event_name] then return end
+    events[event_name](...)
 end
 
 local function __init__()

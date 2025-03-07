@@ -30,9 +30,6 @@ end)
 
 
 lib.callback.register('sw_multichar:server:login', function( source, id )
-
-    print(source, id)
-
     local has_logged, position = exports.sw:PlayerLogin( source, id )
     if has_logged then
         repeat
@@ -49,8 +46,7 @@ end)
 lib.callback.register('sw_multichar:server:try_delete_char', function( source, id )
     local license = exports.sw:GetPlayerIdentifier( source, 'license' )
     local char = GetUserCharacater( id )
-    local result = char?.license == license and not char?.deleted_at
-    print(result)
+    local result = char?.license == license and not char?.deleted_at    
     if result then        
         return exports.sw:CharacterDelete( id, false ) == 1
     end
@@ -105,8 +101,7 @@ AddEventHandler('playerDropped', function()
     end
 end)
 
-AddEventHandler('player:login', function (source, data)
-    print(source, data)
+AddEventHandler('player:login', function (source, data)    
     Wait(1000)
     login[source] = data
 end)

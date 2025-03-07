@@ -46,7 +46,7 @@ end
 ---@param source number | string
 function module.Unload(source)
     if Players[source] then
-        lib.print.info('Unloading player: ' .. source)
+        lib.print.debug('Unloading player: ' .. source)
 
         local PlayerData = table.clone(Players[source].PlayerData)
 
@@ -265,7 +265,7 @@ function module._Save(source, force)
     if Players[source].saving and not force then return end
     Players[source].saving = true
     local prev_data = table.clone(Players[source].PlayerData)
-    print(source, 'Player Saved', prev_data.firstname .. ' ' .. prev_data.lastname)
+    lib.print.debug(source, 'Player Saved', prev_data.firstname .. ' ' .. prev_data.lastname)
     local ped = GetPlayerPed(source)
     local position = GetEntityCoords(ped)
     local health = GetEntityHealth(ped)
@@ -518,7 +518,22 @@ end
 function module._SetAsDead(source, value)
     if not source or not Players[source] then return end
     Players[source].PlayerData.metadata['isdead'] = value
-    Players[source].PlayerData.metadata['health'] = 0
+    Players[source].PlayerData.metadata['health'] = not value and 200 or 0
+end
+
+local function RevivePlayer(src)    
+    module._SetAsDead(src, false)
+end
+
+local function KillPlayer( src, data )
+    module._SetAsDead(src, true)
+    lib.print.info('KILL_PLAYER', data)
+end
+
+
+local function register_events()
+    imod.server.RegisterEvent('revive_player', RevivePlayer)
+    imod.server.RegisterEvent('kill_player', KillPlayer)
 end
 
 local function __init__(storage_module, server_module, character_module)
@@ -526,6 +541,7 @@ local function __init__(storage_module, server_module, character_module)
     imod.storage = storage_module
     imod.server = server_module
     imod.character = character_module
+    register_events()
     return setmetatable(_module, {
         __index = module,
         __tostring = function()

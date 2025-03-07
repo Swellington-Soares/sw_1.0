@@ -1,6 +1,7 @@
 local require = lib.require
 local old_print = print
 local print = lib.print.info
+local debug = lib.print.debug
 local modules = {}
 
 
@@ -14,10 +15,10 @@ modules.email = require '@sw.server.modules.email' ()
 
 for k, v in next, modules do
     old_print()
-    print('Loading module: ' .. v?.name or k:upper())
+    debug('Loading module: ' .. v?.name or k:upper())
     for k2, v2 in next, getmetatable(v)?.__index or {} do
         if k2:sub(1, 1) ~= '_' then
-            print('Registering method exports: ', '[' .. cache.resource .. ']', (v?.exp_prefix or "") .. k2)
+            debug('Registering method exports: ', '[' .. cache.resource .. ']', (v?.exp_prefix or "") .. k2)
             exports((v?.exp_prefix or "") .. k2, v2)
         end
     end
@@ -56,7 +57,7 @@ local function on_player_connecting(name, _, d)
     d.defer()
     Wait(0)
     
-    print('Player connecting: ', name, src)
+    debug('Player connecting: ', name, src)
 
     local response = nil
     local function register_timeout_check()
@@ -164,7 +165,7 @@ end
 local function on_player_dropped(reason)
     local src = source
     modules.player._SaveAndUnload(src)
-    print('Player dropped: ', src, reason)
+    debug('Player dropped: ', src, reason)
 end
 
 --fivem default events
@@ -190,6 +191,12 @@ AddStateBagChangeHandler('isDead', nil, function(bagName, _, value)
     local player = GetPlayerFromStateBagName(bagName)
     if player == 0 then return end
     modules.player._SetAsDead(player, value)
+end)
+
+RegisterNetEvent('sw:server:event', function (event_name, ...)
+    local src = source
+    if not modules.player.GetOne(src) then return end
+    modules.server.TriggerEvent(event_name, src, ...)
 end)
 
 CreateThread(player_save_thread)
