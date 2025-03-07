@@ -71,14 +71,14 @@ local function freezePlayer(id, freeze)
     SetPlayerControl(id, not freeze, false)
     
     if freeze then
-        SetEntityVisible(ped, false)
-        SetEntityCollision(ped, false)
+        SetEntityVisible(ped, false, false)
+        SetEntityCollision(ped, false, false)
         FreezeEntityPosition(ped, true)
         SetPlayerInvincible(id, true)
         if not IsPedFatallyInjured(ped) then ClearPedTasksImmediately(ped) end
     else
-        SetEntityVisible(ped, true)
-        SetEntityCollision(ped, true)
+        SetEntityVisible(ped, true, false)
+        SetEntityCollision(ped, true, true)
         FreezeEntityPosition(ped, false)
         SetPlayerInvincible(id, false)
     end
