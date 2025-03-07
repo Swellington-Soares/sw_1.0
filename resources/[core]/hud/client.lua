@@ -273,3 +273,4 @@ end)
 -- Sets the visibility of the HUD UI element
 ---@param state boolean visible (true) or hidden (false)
 exports('ToggleVisible', Hud.SetVisible)
+AddEventHandler('hud:client:ToggleVisible', Hud.SetVisible)
