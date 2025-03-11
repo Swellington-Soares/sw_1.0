@@ -6,3 +6,5 @@ resources/\[devtools\]/
 db/
 resources/\[testes\]/
 .vscode/
+artifacts/
+*.ini
