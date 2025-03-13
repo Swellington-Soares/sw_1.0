@@ -200,4 +200,3 @@ RegisterNetEvent('sw:server:event', function (event_name, ...)
 end)
 
 CreateThread(player_save_thread)
-

@@ -12,7 +12,8 @@ loadscreen_manual_shutdown 'yes'
 
 shared_scripts {
 	'@ox_lib/init.lua',
-	'shared/*.lua'
+	'shared/*.lua',
+	'shared/modules/hook.lua',
 }
 
 client_scripts {
@@ -42,5 +43,5 @@ loadscreen 'loading/index.html'
 
 files {
 	'loading/**',
-	'shared/*.lua'
+	'shared/**/*.lua'
 }

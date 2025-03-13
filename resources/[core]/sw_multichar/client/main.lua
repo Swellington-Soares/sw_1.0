@@ -609,6 +609,7 @@ end
 CreateThread(function()
     while not NetworkIsPlayerActive(PlayerId()) do Wait(0) end
     LocalPlayer.state:set('isLoggedIn', false, true)
+    LocalPlayer.state:set('ready', false, true)
     Wait(1000)
     exports.spawnmanager:unlockSpawn()
     exports.spawnmanager:spawnPlayer({
