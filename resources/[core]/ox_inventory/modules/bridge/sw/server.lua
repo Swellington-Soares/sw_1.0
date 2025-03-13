@@ -1,25 +1,46 @@
 
 local Inventory = require 'modules.inventory.server'
 
+local function SetupPlayer(data)
+    if not data then return end
+    local inv = {
+        identifier = data.char_id,
+        name = ('%s %s'):format(data.firstname, data.lastname),
+        user_id = data.user_id,
+        source = data.src,
+        license = data.license,
+        sex = data.sex or 'M',
+        groups = {},
+        dateofbirth = os.date("%d/%m/%Y", data.birthdate // 1000),        
+    }
+    server.setPlayerInventory(inv)
+    Inventory.SetItem(data.src, "money", data.money?.cash or 0)
+end
+
 AddStateBagChangeHandler('loadInventory', nil, function(bagName, _, value)
-    -- if not value then return end
-    -- local plySrc = GetPlayerFromStateBagName(bagName)
-    -- if not plySrc then return end
+    if not value then return end
+    local plySrc = GetPlayerFromStateBagName(bagName)
+    if not plySrc then return end
     -- setupPlayer(QBX:GetPlayer(plySrc).PlayerData)
+    local playerData = exports.sw:PlayerGetOne( plySrc )?.PlayerData
+    SetupPlayer(playerData)
 end)
 
 SetTimeout(500, function()
-    -- local playersData = QBX:GetPlayersData()
-    -- for i = 1, #playersData do setupPlayer(playersData[i]) end
+    local players = exports.sw:PlayerGetAll() or {}
+    for i = 1, #players do
+        SetupPlayer(players[i]?.PlayerData)
+    end
 end)
 
-function server.UseItem(source, itemName, data)
-    -- local cb = QBX:CanUseItem(itemName)
-    -- return cb and cb(source, data)
-end
+-- function server.UseItem(source, itemName, data)
+--     -- local cb = QBX:CanUseItem(itemName)
+--     -- return cb and cb(source, data)
+-- end
 
 ---@diagnostic disable-next-line: duplicate-set-field
 function server.setPlayerData(player)
+    lib.print.debug('Setting player data', player)
     -- local groups = QBX:GetGroups(player.source)
     -- return {
     --     source = player.source,
@@ -28,6 +49,7 @@ function server.setPlayerData(player)
     --     sex = player.charinfo.gender,
     --     dateofbirth = player.charinfo.birthdate,
     -- }
+    return {}
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -86,3 +108,11 @@ end
 function server.getOwnedVehicleId(entityId)
     return Entity(entityId).state.vehicleid --or exports.qbx_vehicles:GetVehicleIdByPlate(GetVehicleNumberPlateText(entityId))
 end
+
+AddStateBagChangeHandler('ready', nil, function(bagName, _, value)
+    local player = GetPlayerFromStateBagName(bagName)
+    if player == 0 or not value then return end
+    local playerData = exports.sw:PlayerGetOne( player )?.PlayerData
+    print('Player Ready', player)
+    SetupPlayer(playerData) 
+end)

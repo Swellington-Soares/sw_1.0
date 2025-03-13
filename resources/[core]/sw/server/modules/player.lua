@@ -32,12 +32,22 @@ function module.GetOne(source)
     return Players[source]
 end
 
+
+
 ---Returns all players source from Online PlayerList
 ---@return table<PlayerSource>
 function module.ListAll()
     local p = {}
     for k in next, Players do
         p[#p + 1] = k
+    end
+    return p
+end
+
+function module.GetAll()
+    local p = {}
+    for _, v in next, Players do
+        p[#p+1] = v
     end
     return p
 end
@@ -78,6 +88,7 @@ function module.Unload(source)
 end
 
 function module.Load(source, data)
+    data.src = source
     Players[source] = {
         user_id = data.user_id,
         license = data.license,
@@ -249,8 +260,8 @@ function module.Login(source, id)
     module.SetState(source, 'alcohol', PlayerData.metadata.alcohol, true)
 
     TriggerClientEvent('Player:SyncData', source, PlayerData)
-    TriggerClientEvent('Player:SyncJob', source, 'set', PlayerData.job)
-    TriggerClientEvent('Player:SyncGang', source, 'set', PlayerData.gang)
+    TriggerClientEvent('Player:SyncJob', source, 'set', PlayerData.job?.name, PlayerData.job)
+    TriggerClientEvent('Player:SyncGang', source, 'set',  PlayerData.job?.name, PlayerData.gang)
     TriggerClientEvent('Player:SyncMoney', source, PlayerData.money)
 
     TriggerEvent('player:login', source, { user_id = PlayerData.user_id, char_id = id })
@@ -518,7 +529,7 @@ end
 function module._SetAsDead(source, value)
     if not source or not Players[source] then return end
     Players[source].PlayerData.metadata['isdead'] = value
-    Players[source].PlayerData.metadata['health'] = not value and 200 or 0
+    Players[source].PlayerData.metadata['health'] = not value and 200 or 0 
 end
 
 local function RevivePlayer(src)    

@@ -35,6 +35,9 @@ function module.GetPlayerData()
     return PlayerData
 end
 
+function module.SetPlayerData(key, value)
+end
+
 local function sync_job(job)
     PlayerData.job = job
 end

@@ -10,8 +10,7 @@ use_experimental_fxv2_oal "yes"
 
 shared_scripts {
 	'@ox_lib/init.lua',
-	'shared/*.lua',
-	'shared/modules/hook.lua'
+	'shared/*.lua',	
 }
 
 client_scripts {	
