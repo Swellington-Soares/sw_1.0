@@ -1,1 +1,1 @@
-FxServer +exec config/server.cfg 
+fivem_update.exe --exec config/server.cfg 
