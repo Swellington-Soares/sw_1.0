@@ -436,18 +436,7 @@ local function start_selection_controls()
                                 local skin = current_chars[current_index].skin
                                 if not skin then return end
                                 exports.sw_appearance:setPlayerAppearance(skin)
-                                if is_first_login or not position then
-                                    TriggerEvent('sw_multichar:client:spawn_menu', false, position)
-                                else
-                                    exports.spawnmanager:spawnPlayer({
-                                        x = position.x,
-                                        y = position.y,
-                                        z = position.z,
-                                        heading = position?.heading or 0.0,
-                                        skipFade = false,
-                                        changeSkin = false
-                                    }, function() end)
-                                end
+                                TriggerEvent('sw_multichar:client:spawn_menu', is_first_login, position)                               
                                 clear_all()
                             end)
                     end

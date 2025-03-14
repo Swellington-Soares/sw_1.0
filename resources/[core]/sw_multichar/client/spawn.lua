@@ -29,9 +29,11 @@ local function clear_all()
 end
 
 
-local function do_spawn(pos)
-    SetEntityCoords(cache.ped, pos.x, pos.y, pos.z, false, false, false, false)
-    SetEntityHeading(cache.ped, pos.w or 0.0)
+local function do_spawn(x, y, z)
+    local pos = vec3(x, y, z)
+    lib.print.info('do_spawn...', pos)
+    ClearFocus()
+    SetEntityCoords(cache.ped, pos.x, pos.y, pos.z, false, false, false, false)    
     Wait(0)
     FreezeEntityPosition(cache.ped, true)
     RequestCollisionAtCoord(pos.x, pos.y, pos.z)
@@ -42,8 +44,8 @@ local function do_spawn(pos)
     ClearPedTasksImmediately(cache.ped)   
     local aux_cam = CreateCam('DEFAULT_SCRIPTED_CAMERA', false)
     local fw = GetEntityForwardVector(cache.ped) * -2.0
-    pos = pos + fw
-    SetCamCoord(aux_cam, pos.x, pos.y, pos.z)
+    local xpos = pos + fw
+    SetCamCoord(aux_cam, xpos.x, xpos.y, xpos.z)
     SetCamActiveWithInterp(aux_cam, spawn_cam, 2000, 0, 1)
     Wait(1100)
     SetCamActive(spawn_cam, false)
@@ -58,18 +60,22 @@ local function do_spawn(pos)
 end
 
 local function spawn(isFirst, last_location)    
+    print(isFirst, last_location)
     DoScreenFadeIn(0)
     lib.hideMenu()
     Wait(250)
     local options = {}
 
-    if not isFirst and last_location then
+    if isFirst and last_location then
         options[#options + 1] = {
             label = 'Última Localização',
             args = { last_location }
         }
     end
 
+    if not isFirst and last_location then
+        return do_spawn(last_location.x, last_location.y, last_location.z)
+    end
 
     for i = 1, #config.SpawnPoints or {} do
         options[#options + 1] = {
@@ -90,20 +96,9 @@ local function spawn(isFirst, last_location)
         canClose = false,
         disableInput = true,
     }, function(_, _, args)
-        SetEntityCoords(PlayerPedId(), args[1].x, args[1].y, args[1].z, true, false, false, false)
-        ClearFocus()
-        Wait(100)
-        local fw = GetEntityForwardVector(cache.ped) * -2.0
-        local aux_cam = CreateCam('DEFAULT_SCRIPTED_CAMERA', false)
-        SetCamCoord(aux_cam, args[1].x + fw.x, args[1].y + fw.y, args[1].z)
-        SetCamActiveWithInterp(aux_cam, spawn_cam, 1000, 0, 1)
-        Wait(1100)
-        SetCamActive(spawn_cam, false)
-        DestroyCam(spawn_cam, true)
-        spawn_cam = aux_cam
-        Wait(100)
-        FreezeEntityPosition(PlayerPedId(), false)
-        clear_all()
+        lib.print.info('Spawnando...', args[1])
+        local pos = args[1]
+        do_spawn(pos.x, pos.y, pos.z)
     end)
 
     create_preview_cam(options[1].args[1])    

@@ -13,13 +13,14 @@ end
 function module.CharacterGetOne(id)
     local character = imod.storage.Single('SELECT * FROM view_player WHERE char_id = ?', { id })
     if not character then return end
-    character.metadata = character.metadata and json.decode(character.metadata) or {}
+    character.metadata = character.metadata and json.decode(character.metadata)
     character.groups = character.groups and json.decode(character.groups)
     character.lastposition = character.lastposition and json.decode(character.lastposition)
     character.job = character.job and json.decode(character.job) 
     character.gang = character.gang and json.decode(character.gang)
     character.permissions = character.permissions and json.decode(character.permissions) 
     character.skin = character.skin and json.decode(character.skin)
+    character.money  = character.money and json.decode(character.money)
     return character
 end
 
@@ -33,13 +34,14 @@ function module.CharacterGetAll(license, exclude_delete)
     local characters = imod.storage.Fetch(q, { license })
     if not characters then return end
     for k in next, characters do
-        characters[k].metadata = characters[k].metadata and json.decode(characters[k].metadata) or {}
-        characters[k].groups = characters[k].groups and json.decode(characters[k].groups) or {}
-        characters[k].lastposition = characters[k].lastposition and json.decode(characters[k].lastposition) or {}
-        characters[k].job = characters[k].job and json.decode(characters[k].job) or {}
-        characters[k].gang = characters[k].gang and json.decode(characters[k].gang) or {}
-        characters[k].permissions = characters[k].permissions and json.decode(characters[k].permissions) or {}
-        characters[k].skin = characters[k].skin and json.decode(characters[k].skin) or {}
+        characters[k].metadata = characters[k].metadata and json.decode(characters[k].metadata)
+        characters[k].groups = characters[k].groups and json.decode(characters[k].groups)
+        characters[k].lastposition = characters[k].lastposition and json.decode(characters[k].lastposition)
+        characters[k].job = characters[k].job and json.decode(characters[k].job)
+        characters[k].gang = characters[k].gang and json.decode(characters[k].gang)
+        characters[k].permissions = characters[k].permissions and json.decode(characters[k].permissions)
+        characters[k].skin = characters[k].skin and json.decode(characters[k].skin)
+        characters[k].money  = characters[k].money and json.decode(characters[k].money)
     end
 
     return characters

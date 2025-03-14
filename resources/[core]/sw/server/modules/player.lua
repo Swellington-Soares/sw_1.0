@@ -88,11 +88,11 @@ function module.Unload(source)
 end
 
 function module.Load(source, data)
-    data.src = source
+    data.source = source
     Players[source] = {
         user_id = data.user_id,
         license = data.license,
-        src = source,
+        source = source,
         char_id = data.char_id,
         PlayerData = data,
     }
@@ -330,23 +330,45 @@ function module.StopAnim(src, upper)
     TriggerClientEvent('Player:StopAnim', src, upper)
 end
 
+function module.GetMoney(src, money_type)
+    if not Players[src] then return end
+    if not Players[src].PlayerData.money[money_type] then return 0 end
+    return Players[src].PlayerData.money[money_type]
+end
+
+function module.SetMoney(src, money_type, value)   
+    if value >= 0 then    
+        if not Players[src] then return end
+        Players[src].PlayerData.money[money_type] = value
+        return true
+    end
+end
+
+function module.AddMoney(src, money_type, value)
+    if value >= 0 then
+        if not Players[src] then return end
+        Players[src].PlayerData.money[money_type] = (Players[src].PlayerData.money[money_type] or 0) + value
+        return true
+    end
+end
+
+function module.RemoveMoney(src, money_type, value)
+    if value >= 0 then
+        if not Players[src] then return end
+        Players[src].PlayerData.money[money_type] = (Players[src].PlayerData.money[money_type] or value) - value
+        return true
+    end
+end
+
 --Net events
 RegisterNetEvent('Player:Server:Money', function(action, money_type, value)
-    local source = source
-    if not Players[source] then return end
-    if value < 0 then return end
     if action == 'set' then
-        Players[source].PlayerData.money[money_type] = value
+        module.SetMoney(source, money_type, value)
     elseif action == 'add' then
-        if value == 0 then return end
-        Players[source].PlayerData.money[money_type] = (Players[source].PlayerData.money[money_type] or 0) + value
+        module.AddMoney(source, money_type, value)
     elseif action == 'remove' then
-        if value == 0 then return end
-        Players[source].PlayerData.money[money_type] = (Players[source].PlayerData.money[money_type] or 0) - value
-        if Players[source].PlayerData.money[money_type] < 0 then
-            Players[source].PlayerData.money[money_type] = 0
-        end
-    end
+        module.RemoveMoney(source, money_type, value)
+    end    
     TriggerClientEvent('Player:SyncMoney', source, Players[source].PlayerData.money, action, money_type, value)
 end)
 

@@ -133,6 +133,7 @@ function module.StopAnim(upper, force)
 end
 
 function module.SetPlayerReady(ready)
+    lib.print.debug("module.SetPlayerReady", ready)
     LocalPlayer.state:set('ready', ready, true)
     LocalPlayer.state:set('isLoggedIn', true, true)
 end

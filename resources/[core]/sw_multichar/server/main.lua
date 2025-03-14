@@ -55,6 +55,9 @@ lib.callback.register('sw_multichar:server:login', function(source, id)
         local is_first = not spawned[login[source].char_id]
         spawned[login[source].char_id] = true
         login[source] = nil
+
+        print('LOGIN', is_first, position)
+
         return true, is_first, position
     end
 end)
@@ -121,9 +124,3 @@ AddEventHandler('player:login', function(source, data)
     Wait(1000)
     login[source] = data
 end)
-
-RegisterCommand('logout', function(source)
-    local src = source
-    if src == 0 or not IsPlayerAceAllowed(src, 'command.logout') then return end
-    print("OKOK")
-end, true)
